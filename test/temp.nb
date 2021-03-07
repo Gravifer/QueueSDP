@@ -1,0 +1,215 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["LocalObject", "Section"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Import", "@",
+  RowBox[{
+  "LocalObject", "[", "\"\<file:///C:/Users/Fang%20Tci/Desktop/plus3\>\"",
+   "]"}]}]], "Input"]
+}]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extfunc", "[",
+   RowBox[{"x__", ",", "y_"}], "]"}], ":=",
+  RowBox[{"Module", "[",
+   RowBox[{
+    RowBox[{"{",
+     RowBox[{
+      RowBox[{"a", "=",
+       RowBox[{"Length", "[", "x", "]"}]}], ",",
+      RowBox[{"b", "=", "4"}]}], "}"}], ",",
+    RowBox[{"x", ";", "y", ";",
+     RowBox[{"{",
+      RowBox[{"x", ",", "y", ",",
+       RowBox[{"a", "*", "x"}], ",",
+       RowBox[{"b", "+", "y"}]}], "}"}]}]}], "]"}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"func", "=",
+   RowBox[{"APIFunction", "[",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{
+       RowBox[{"\"\<x\>\"", "\[Rule]", "\"\<List\>\""}], ",",
+       RowBox[{"\"\<y\>\"", "\[Rule]", "\"\<Integer\>\""}]}], "}"}], ",",
+     "extfunc"}], "]"}]}], ";"}], "\[IndentingNewLine]",
+ RowBox[{"Put", "[",
+  RowBox[{"func", ",",
+   RowBox[{
+   "LocalObject", "[",
+    "\"\<C:\\\\Users\\\\Fang Tci\\\\Desktop\\\\.Wolfram\\\\func\>\"", "]"}]}],
+   "]"}]}], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[",
+  RowBox[{
+   RowBox[{
+   "LocalObject", "[",
+    "\"\<C:\\\\Users\\\\Fang Tci\\\\Desktop\\\\.Wolfram\\\\func\>\"", "]"}],
+   ",", "func"}], "]"}]], "Input"]
+}]],
+
+Cell[BoxData[
+ RowBox[{"SystemOpen", "@", "$LocalBase"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LocalObjects", "[", "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$Path"], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ls", "=",
+   RowBox[{"{",
+    RowBox[{"a", ",", "b", ",", "c", ",", "d", ",", "e"}], "}"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"ls", "//=",
+   RowBox[{
+    RowBox[{"Insert", "[",
+     RowBox[{"#", ",", "ins", ",",
+      RowBox[{"FirstPosition", "[",
+       RowBox[{"#", ",", "c"}], "]"}]}], "]"}], "&"}]}],
+  ";"}], "\[IndentingNewLine]", "ls"}], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Part", "[",
+  RowBox[{"$Path", ",",
+   RowBox[{"FirstPosition", "[",
+    RowBox[{"$Path", ",", "\"\<.\>\""}], "]"}]}], "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Import", "@",
+  RowBox[{
+  "LocalObject", "[", "\"\<file:///C:/Users/Fang%20Tci/Desktop/func\>\"",
+   "]"}]}]], "Input"]
+}]],
+
+Cell[BoxData[""], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", "\"\<C:\\\\Users\\\\Fang Tci\\\\Documents\>\"",
+  "]"}]], "Input"]
+}]],
+
+Cell[BoxData[
+ RowBox[{"SystemOpen", "[",
+  "\"\<C:\\\\Users\\\\Fang Tci\\\\Documents\\\\Wolfram\>\"", "]"}]], "Input",
+ NumberMarks->False],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", "\"\<./test\>\"", "]"}]], "Input"]
+}]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$Path", "//=",
+   RowBox[{
+    RowBox[{"Insert", "[",
+     RowBox[{"#", ",", "\"\<./test\>\"", ",",
+      RowBox[{"FirstPosition", "[",
+       RowBox[{"#", ",", "\"\<.\>\""}], "]"}]}], "]"}], "&"}]}],
+  ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$LocalSymbolBase"], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$LocalBase"], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"PacletFind", "[", "\"\<CodeInspector\>\"", "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"PacletFind", "[", "\"\<CUDALink\>\"", "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Uncompress", "[",
+  "\"\<1:eJxTTMoPCpZlYGAoLi0oyC8qcSjPKcgpTc/M08tIzMksKi1JzNNLSQUA8dUNcQ==\>\"\
+", "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"NotebookDirectory", "[", "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"NotebookInformation", "[", "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\"\<FileName\>\"", "/.",
+  RowBox[{"NotebookInformation", "[",
+   RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$InputFileName"], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"StringReplace", "[",
+  RowBox[{
+   RowBox[{"NotebookFileName", "[", "]"}], ",",
+   RowBox[{"\"\<\\\\\>\"", "\[Rule]", "\"\</\>\""}]}], "]"}]], "Input"]
+}]],
+
+Cell[BoxData["ExternalEvaluate"], "Input"]
+}]],
+
+Cell["Other", "Section"]
+}]
+(* End of Notebook Content *)

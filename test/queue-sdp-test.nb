@@ -1,0 +1,1116 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Queue-SDP", "Title"],
+
+Cell[CellGroupData[{
+
+Cell["Preamble", "Subsubsection",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+
+Cell[BoxData[{
+ RowBox[{
+  InterpretationBox[
+   TagBox[
+    DynamicModuleBox[{Typeset`open = False},
+     FrameBox[
+      PaneSelectorBox[{False->GridBox[{
+         {
+          PaneBox[GridBox[{
+             {
+              StyleBox[
+               StyleBox[
+                AdjustmentBox["\<\"[\[FilledSmallSquare]]\"\>",
+                 BoxBaselineShift->-0.25,
+                 BoxMargins->{{0, 0}, {-1, -1}}], "ResourceFunctionIcon",
+
+                FontColor->RGBColor[
+                 0.8745098039215686, 0.2784313725490196, 0.03137254901960784]],
+               ShowStringCharacters->False,
+               FontFamily->"Source Sans Pro Black",
+               FontSize->0.6538461538461539 Inherited,
+               FontWeight->"Heavy",
+               PrivateFontOptions->{"OperatorSubstitution"->False}],
+              StyleBox[
+               RowBox[{
+                StyleBox["DarkMode", "ResourceFunctionLabel"], " "}],
+               ShowAutoStyles->False,
+               ShowStringCharacters->False,
+               FontSize->Rational[12, 13] Inherited,
+               FontColor->GrayLevel[0.1]]}
+            },
+            GridBoxSpacings->{"Columns" -> {{0.25}}}],
+           Alignment->Left,
+           BaseStyle->{LineSpacing -> {0, 0}, LineBreakWithin -> False},
+           BaselinePosition->Baseline,
+           FrameMargins->{{3, 0}, {0, 0}}],
+          ItemBox[
+           PaneBox[
+            TogglerBox[Dynamic[Typeset`open], {True->
+
+             DynamicBox[FEPrivate`FrontEndResource[
+              "FEBitmaps", "IconizeCloser"],
+              ImageSizeCache->{8.25, {1., 7.25}}], False->
+
+             DynamicBox[FEPrivate`FrontEndResource[
+              "FEBitmaps", "IconizeOpener"],
+              ImageSizeCache->{8.25, {1., 7.25}}]},
+             Appearance->None,
+             BaselinePosition->Baseline,
+             ContentPadding->False,
+             FrameMargins->0],
+            Alignment->Left,
+            BaselinePosition->Baseline,
+            FrameMargins->{{1, 1}, {0, 0}}],
+           Frame->{{
+              RGBColor[
+              0.8313725490196079, 0.8470588235294118, 0.8509803921568627,
+               0.5], False}, {False, False}}]}
+        },
+        BaselinePosition->{1, 1},
+        GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+        GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+        GridBoxSpacings->{"Columns" -> {{0}}, "Rows" -> {{0}}}], True->
+       GridBox[{
+         {GridBox[{
+            {
+             PaneBox[GridBox[{
+                {
+                 StyleBox[
+                  StyleBox[
+                   AdjustmentBox["\<\"[\[FilledSmallSquare]]\"\>",
+                    BoxBaselineShift->-0.25,
+                    BoxMargins->{{0, 0}, {-1, -1}}], "ResourceFunctionIcon",
+
+                   FontColor->RGBColor[
+                    0.8745098039215686, 0.2784313725490196,
+                    0.03137254901960784]],
+                  ShowStringCharacters->False,
+                  FontFamily->"Source Sans Pro Black",
+                  FontSize->0.6538461538461539 Inherited,
+                  FontWeight->"Heavy",
+                  PrivateFontOptions->{"OperatorSubstitution"->False}],
+                 StyleBox[
+                  RowBox[{
+                   StyleBox["DarkMode", "ResourceFunctionLabel"], " "}],
+                  ShowAutoStyles->False,
+                  ShowStringCharacters->False,
+                  FontSize->Rational[12, 13] Inherited,
+                  FontColor->GrayLevel[0.1]]}
+               },
+               GridBoxSpacings->{"Columns" -> {{0.25}}}],
+              Alignment->Left,
+              BaseStyle->{LineSpacing -> {0, 0}, LineBreakWithin -> False},
+              BaselinePosition->Baseline,
+              FrameMargins->{{3, 0}, {0, 0}}],
+             ItemBox[
+              PaneBox[
+               TogglerBox[Dynamic[Typeset`open], {True->
+
+                DynamicBox[FEPrivate`FrontEndResource[
+                 "FEBitmaps", "IconizeCloser"],
+                 ImageSizeCache->{9.9, {2., 7.9}}], False->
+
+                DynamicBox[FEPrivate`FrontEndResource[
+                 "FEBitmaps", "IconizeOpener"],
+                 ImageSizeCache->{9.9, {2., 7.9}}]},
+                Appearance->None,
+                BaselinePosition->Baseline,
+                ContentPadding->False,
+                FrameMargins->0],
+               Alignment->Left,
+               BaselinePosition->Baseline,
+               FrameMargins->{{1, 1}, {0, 0}}],
+              Frame->{{
+                 RGBColor[
+                 0.8313725490196079, 0.8470588235294118, 0.8509803921568627,
+                  0.5], False}, {False, False}}]}
+           },
+           BaselinePosition->{1, 1},
+           GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+           GridBoxSpacings->{"Columns" -> {{0}}, "Rows" -> {{0}}}]},
+         {
+          StyleBox[
+           PaneBox[GridBox[{
+              {
+               RowBox[{
+                TagBox["\<\"Version (latest): \"\>",
+                 "IconizedLabel"], " ",
+                TagBox["\<\"2.0.0\"\>",
+                 "IconizedItem"]}]},
+              {
+               TagBox[
+
+                TemplateBox[{
+                 "\"Documentation \[RightGuillemet]\"",
+                  "https://resources.wolframcloud.com/FunctionRepository/\
+resources/DarkMode"},
+                 "HyperlinkURL"],
+                "IconizedItem"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            Alignment->Left,
+            BaselinePosition->Baseline,
+            FrameMargins->{{5, 4}, {0, 4}}], "DialogStyle",
+           FontFamily->"Roboto",
+           FontSize->11]}
+        },
+        BaselinePosition->{1, 1},
+        GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+        GridBoxDividers->{"Columns" -> {{None}}, "Rows" -> {False, {
+             GrayLevel[0.8]}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]}, Dynamic[
+       Typeset`open],
+       BaselinePosition->Baseline,
+       ImageSize->Automatic],
+      Background->RGBColor[
+       0.9686274509803922, 0.9764705882352941, 0.984313725490196],
+      BaselinePosition->Baseline,
+      DefaultBaseStyle->{},
+      FrameMargins->{{0, 0}, {1, 0}},
+      FrameStyle->RGBColor[
+       0.8313725490196079, 0.8470588235294118, 0.8509803921568627],
+      RoundingRadius->4]],
+    {"FunctionResourceBox",
+     RGBColor[0.8745098039215686, 0.2784313725490196, 0.03137254901960784],
+     "DarkMode"},
+    TagBoxNote->"FunctionResourceBox"],
+   ResourceFunction[
+    ResourceObject[
+     Association[
+     "Name" -> "DarkMode", "ShortName" -> "DarkMode", "UUID" ->
+      "6ae9b15e-dd80-4d11-be6e-434bf9ac9265", "ResourceType" -> "Function",
+      "Version" -> "2.0.0", "Description" ->
+      "Restyle notebooks into dark mode", "RepositoryLocation" ->
+      URL["https://www.wolframcloud.com/objects/resourcesystem/api/1.0"],
+      "SymbolName" ->
+      "FunctionRepository`$f2abd2063089401aafe135eb354a8d92`DarkMode",
+      "FunctionLocation" ->
+      CloudObject[
+       "https://www.wolframcloud.com/obj/91755122-26ae-43f1-8e41-\
+4043472dcf8a"]], ResourceSystemBase -> Automatic]],
+   Selectable->False], ";"}], "\[IndentingNewLine]",
+ RowBox[{"SetOptions", "[",
+  RowBox[{
+   RowBox[{"SelectedNotebook", "[", "]"}], ",",
+   RowBox[{"PrintingStyleEnvironment", "\[Rule]", "\"\<Printout\>\""}], ",",
+   RowBox[{"ShowSyntaxStyles", "\[Rule]", "True"}]}],
+  "]"}], "\[IndentingNewLine]",
+ RowBox[{"ClearAll", "[",
+  RowBox[{"Evaluate", "[",
+   RowBox[{
+    RowBox[{"ToString", "[",
+     RowBox[{"Context", "[", "]"}], "]"}], "<>", "\"\<*\>\""}], "]"}],
+  "]"}]}], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Definitions", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Basic Functions", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"integerCompositions", "=",
+   RowBox[{
+    RowBox[{"Reverse", "[",
+     RowBox[{
+      RowBox[{"ResourceFunction", "[", "\"\<IntegerCompositions\>\"", "]"}],
+      "[",
+      RowBox[{"#1", ",", "#2"}], "]"}], "]"}], "&"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"edg2mat", "=",
+   RowBox[{
+    RowBox[{"(",
+     RowBox[{
+      RowBox[{"(",
+       RowBox[{"\[FormalX]", "\[Function]",
+        RowBox[{
+         RowBox[{"(",
+          RowBox[{"\[FormalY]", "\[Function]",
+           RowBox[{"(",
+            RowBox[{"\[FormalX]", "+", "\[FormalY]"}], ")"}]}], ")"}], "/@",
+         "#"}]}], ")"}], "/@", "#"}], ")"}], "&"}]}], ";"}]}], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["SDP cone-matrix", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "For the sake of clarity, the usually known ",
+ ButtonBox["multi-index notation",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://en.wikipedia.org/wiki/Multi-index_notation"], None},
+  ButtonNote->"https://en.wikipedia.org/wiki/Multi-index_notation"],
+ " is hereafter called a vecponent (i.e., ",
+ ButtonBox["vector exponent",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://mathworld.wolfram.com/ExponentVector.html"], None},
+  ButtonNote->"https://mathworld.wolfram.com/ExponentVector.html"],
+ ")."
+}], "Text",
+ CellGroupingRules->{"GroupTogetherGrouping", 10001.}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "Only", " ", "memoized", " ", "recursives", " ", "are", " ", "explicitly",
+    " ", "cleared", " ", "before", " ", "definition"}], "*)"}],
+  "\[IndentingNewLine]",
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"K", "::", "usage"}], "=", "\"\<number of queues\>\""}], ";"}],
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"r", "::", "usage"}], "=", "\"\<rank of relaxation\>\""}], ";"}],
+    "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"K", "=", "3"}], ";",
+    RowBox[{"r", "=", "3"}], ";"}], "\[IndentingNewLine]",
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"\[Alpha]IC", "::", "usage"}], "=",
+     "\"\<concerned \
+\!\(\*Cell[TextData[StyleBox[\"\[Alpha]\",FontSize->12,FontWeight->\"Bold\"]],\
+ExpressionUUID->\"8ab6b8df-cf8b-4ebf-b553-1292cd24f184\"]\) vecponents\>\""}],
+     ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"\[Alpha]IC", "=",
+     RowBox[{"Join", "@@",
+      RowBox[{"Table", "[",
+       RowBox[{
+        RowBox[{"integerCompositions", "[",
+         RowBox[{"\[FormalR]", ",", "K"}], "]"}], ",",
+        RowBox[{"{",
+         RowBox[{"\[FormalR]", ",", "0", ",",
+          RowBox[{"2", "r"}]}], "}"}]}], "]"}]}]}], ";"}],
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"edgIC", "::", "usage"}], "=",
+     "\"\<concerned \!\(\*Cell[TextData[{
+StyleBox[\"(\",FontSize->12],
+StyleBox[\"\[Alpha]\",FontSize->12,FontWeight->\"Bold\"],
+StyleBox[\",\[Beta])\",FontSize->12]
+}],ExpressionUUID->\"c3b0083a-6358-403e-a84d-f2841e0f07bb\"]\) \
+vecponents\>\""}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"edgIC", "=",
+     RowBox[{"Join", "@@",
+      RowBox[{"Table", "[",
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"ArrayReshape", "[",
+           RowBox[{"#", ",",
+            RowBox[{"{",
+             RowBox[{"2", ",", "K"}], "}"}]}], "]"}], "&"}], "/@",
+         RowBox[{"integerCompositions", "[",
+          RowBox[{"\[FormalR]", ",",
+           RowBox[{"2", "K"}]}], "]"}]}], ",",
+        RowBox[{"{",
+         RowBox[{"\[FormalR]", ",", "0", ",", "r"}], "}"}]}], "]"}]}]}],
+    ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"matIC", "::", "usage"}], "=",
+     "\"\<concerned semi-positive-definite matrix, represented as \
+vecponents\>\""}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"matIC", "=",
+     RowBox[{"edgIC", "//", "edg2mat"}]}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"matICdim", "=",
+     RowBox[{"Dimensions", "[",
+      RowBox[{"matIC", ",", "2"}], "]"}]}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"ClearAll", "[", "loc", "]"}], ";",
+    RowBox[{
+     RowBox[{"loc", "::", "usage"}], "=",
+     "\"\<look up a vecponent in matIC\>\""}], ";",
+    RowBox[{
+     RowBox[{"loc", "::", "usage", "::", "ChineseSimplified"}], "=",
+     "\"\<\:5728 \
+\!\(\*Cell[\"matIC\",ExpressionUUID->\"f9c59498-c2df-441e-bfcd-d428861ac95b\"]\
+\) \:4e2d\:67e5\:627e\:4e00\:4e2a\:591a\:91cd\:6307\:6807\>\""}], ";"}],
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"loc", "[", "vecponent_", "]"}], ":=",
+     RowBox[{
+      RowBox[{"loc", "[", "vecponent", "]"}], "=",
+      RowBox[{"FirstPosition", "[",
+       RowBox[{"matIC", ",", "vecponent", ",",
+        RowBox[{"Missing", "[", "\"\<NotFound\>\"", "]"}], ",",
+        RowBox[{"{", "2", "}"}]}], "]"}]}]}], ";"}]}]}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10001.},
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Misc", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"matX", "::", "usage"}], "=",
+   "\"\<formal representation of \
+\!\(\*Cell[\"matIC\",ExpressionUUID->\"e638f67f-5d65-4182-8cf8-09e82d577ffe\"]\
+\)\>\""}], ";",
+  RowBox[{
+   RowBox[{"matX", "::", "usage", "::", "ChineseSimplified"}], "=",
+   "\"\<\!\(\*Cell[\"matIC\",ExpressionUUID->\"4695cc3c-2d18-4885-a35f-\
+1bcaf9f9d706\"]\) \:7684\:5f62\:5f0f\:8868\:793a\>\""}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"matX", "[", "]"}], "=",
+   RowBox[{"Map", "[",
+    RowBox[{
+     RowBox[{
+      RowBox[{"Superscript", "[",
+       RowBox[{
+        RowBox[{"Style", "[",
+         RowBox[{"\[FormalX]", ",", "Larger"}], "]"}], ",",
+        RowBox[{"Style", "[",
+         RowBox[{
+          RowBox[{"MatrixForm", "[",
+           RowBox[{"#", ",",
+            RowBox[{"TableSpacing", "\[Rule]",
+             RowBox[{"{",
+              RowBox[{"0", ",", "0"}], "}"}]}]}], "]"}], ",", "Smaller"}],
+         "]"}]}], "]"}], "&"}], ",", "matIC", ",",
+     RowBox[{"{", "2", "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"matX", "[",
+    RowBox[{"s_", ":",
+     RowBox[{"Except", "[", "All", "]"}]}], "]"}], ":=",
+   RowBox[{
+    RowBox[{"matX", "[", "s", "]"}], "=",
+    RowBox[{"Map", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Subsuperscript", "[",
+        RowBox[{
+         RowBox[{"Style", "[",
+          RowBox[{"\[FormalX]", ",", "Larger"}], "]"}], ",", "s", ",",
+         RowBox[{"Style", "[",
+          RowBox[{
+           RowBox[{"MatrixForm", "[",
+            RowBox[{"#", ",",
+             RowBox[{"TableSpacing", "\[Rule]",
+              RowBox[{"{",
+               RowBox[{"0", ",", "0"}], "}"}]}]}], "]"}], ",", "Smaller"}],
+          "]"}]}], "]"}], "&"}], ",", "matIC", ",",
+      RowBox[{"{", "2", "}"}]}], "]"}]}]}], ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"matX", "[", "All", "]"}], "=",
+   RowBox[{"Table", "[",
+    RowBox[{
+     RowBox[{"matX", "[", "k", "]"}], ",",
+     RowBox[{"{",
+      RowBox[{"k", ",", "1", ",",
+       SuperscriptBox["2", "K"]}], "}"}]}], "]"}]}], ";"}]}], "Input",
+ InitializationCell->True]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Known moments", "Subsection"],
+
+Cell[TextData[{
+ "In the semi-definite optimisation procedure, ",
+ Cell[BoxData[
+  FormBox[
+   StyleBox[
+    RowBox[{
+     RowBox[{"m", "(",
+      StyleBox["\[Beta]",
+       FontWeight->"Bold"], ")"}], " ", "=", " ",
+     RowBox[{
+      RowBox[{"\[DoubleStruckCapitalE]", "[", Cell[TextData[Cell[BoxData[
+        FormBox[
+         SuperscriptBox[
+          StyleBox["X",
+           FontWeight->"Bold"],
+          StyleBox["\[Beta]",
+           FontWeight->"Bold"]], TraditionalForm]],ExpressionUUID->
+        "9193c70f-ee14-462e-95f4-12faba39350e"]],ExpressionUUID->
+        "d60c0cf6-3d5a-4373-9ee4-0da051d4cdbe"], "]"}], "=",
+      RowBox[{"\[DoubleStruckCapitalE]", "[", Cell[TextData[Cell[BoxData[
+        FormBox[
+         SuperscriptBox[
+          RowBox[{"(",
+           RowBox[{
+            StyleBox["S",
+             FontWeight->"Bold"], "-",
+            StyleBox["A",
+             FontWeight->"Bold"]}], ")"}],
+          StyleBox["\[Beta]",
+           FontWeight->"Bold"]], TraditionalForm]],ExpressionUUID->
+        "d53a3a45-d868-437f-8521-617f6cd6c588"]],ExpressionUUID->
+        "cf1a464e-dc64-4e30-8cb3-936aed773204"], "]"}]}]}],
+    FontSize->12], TraditionalForm]], "InlineFormula",ExpressionUUID->
+  "9d4f3c05-aab0-4be2-8664-b78c887e00c4"],
+ ", the moments of the increments to the per-queue waiting times must be \
+known. The current version of our code uses the moments of the service time \
+and arrival time respectively to calculate these quantities."
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[Lambda]", "::", "usage"}], "=", "\"\<arrival rate\>\""}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[Mu]", "::", "usage"}], "=", "\"\<service rate\>\""}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"\[Lambda]", "=", ".5"}], ";",
+  RowBox[{"\[Mu]", "=", "1"}], ";"}]}], "Input",
+ InitializationCell->True],
+
+Cell[CellGroupData[{
+
+Cell["Increment", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", "m", "]"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"m", "[",
+    RowBox[{"{",
+     RowBox[{"0", ".."}], "}"}], "]"}], ":=", "1"}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"m", "[",
+    RowBox[{"{", "\[Beta]_Integer", "}"}], "]"}], ":=",
+   RowBox[{
+    RowBox[{"m", "[", "\[Beta]", "]"}], "=",
+    SuperscriptBox["\[FormalM]",
+     RowBox[{"Style", "[",
+      RowBox[{"\[Beta]", ",", "Smaller"}], "]"}]]}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"If", "[",
+   RowBox[{
+    RowBox[{"K", ">", "1"}], ",",
+    RowBox[{
+     RowBox[{"m", "[", "\[Beta]_List", "]"}], ":=",
+     RowBox[{
+      RowBox[{"m", "[", "\[Beta]", "]"}], "=",
+      SuperscriptBox["\[FormalM]",
+       RowBox[{"Style", "[",
+        RowBox[{
+         RowBox[{"TableForm", "[",
+          RowBox[{"\[Beta]", ",",
+           RowBox[{"TableSpacing", "\[Rule]",
+            RowBox[{"{",
+             RowBox[{"0", ",", "0"}], "}"}]}], ",",
+           RowBox[{"TableDirections", "\[Rule]", "Row"}]}], "]"}], ",",
+         "Smaller"}], "]"}]]}]}]}], "]"}], ";",
+  RowBox[{
+   RowBox[{"m", "::", "usage"}], "=",
+   "\"\<Moments of \
+\!\(\*Cell[TextData[StyleBox[\"X\",FontSlant->\"Italic\"]],ExpressionUUID->\"\
+ceabc312-249c-4a64-9716-39cfc44427ee\"]\); remained abstract.\>\""}], ";",
+  RowBox[{
+   RowBox[{"m", "::", "usage", "::", "ChineseSimplified"}], "=",
+   "\"\<\!\(\*Cell[TextData[StyleBox[\"X\",FontSlant->\"Italic\"]],\
+ExpressionUUID->\"9e9e31a3-41cf-42ee-a3a2-2955105981bc\"]\) \
+\:7684\:5404\:9636\:77e9; \:4fdd\:7559\:62bd\:8c61\:5f62\:5f0f.\>\""}],
+  ";"}]}], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->True],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"m", "/:",
+   RowBox[{"Power", "[",
+    RowBox[{"m", ",", "\[Beta]_List"}], "]"}], ":=",
+   RowBox[{"m", "[", "\[Beta]", "]"}]}], ";"}]], "Input",
+ InitializationCell->True]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Constraints LHS", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConstraintMatView", "[",
+    RowBox[{"array_List", "|", "array_SparseArray"}], "]"}], ":=",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"If", "[",
+       RowBox[{
+        RowBox[{
+         RowBox[{"ArrayDepth", "@", "#"}], ">", "1"}], ",",
+        RowBox[{
+         RowBox[{"Map", "[",
+          RowBox[{"Column", ",", "#", ",",
+           RowBox[{"{",
+            RowBox[{
+             RowBox[{"ArrayDepth", "@", "#"}], "-", "1"}], "}"}]}], "]"}],
+         "&"}], ",", "Identity"}], "]"}], "@",
+      RowBox[{"Map", "[",
+       RowBox[{"Row", ",", "#", ",",
+        RowBox[{"{",
+         RowBox[{
+          RowBox[{"ArrayDepth", "@", "#"}], "-", "1"}], "}"}]}], "]"}]}],
+     "&"}], "@",
+    RowBox[{"(",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Map", "[",
+        RowBox[{"MatrixForm", ",", "#", ",",
+         RowBox[{"{",
+          RowBox[{
+           RowBox[{"ArrayDepth", "@", "#"}], "-", "2"}], "}"}]}], "]"}],
+       "&"}], "@",
+      RowBox[{"Normal", "[", "array", "]"}]}], ")"}]}]}], ";",
+  RowBox[{
+   RowBox[{"ConstraintMatView", "::", "usage"}], "=",
+   "\"\<Show constraints as matrices; 3-d tensors are shown as a row of \
+matrices.\>\""}], ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConstraintEqnView", "[",
+    RowBox[{"array_List", "|", "array_SparseArray"}], "]"}], ":=",
+   RowBox[{
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"ArrayDepth", "@", "array"}], ">", "3"}], ",",
+      RowBox[{
+       RowBox[{"Column", "[",
+        RowBox[{"Map", "[",
+         RowBox[{
+          RowBox[{
+           RowBox[{"(",
+            RowBox[{
+             RowBox[{"Total", "[",
+              RowBox[{
+               RowBox[{"Times", "[",
+                RowBox[{"#", ",",
+                 RowBox[{"matX", "[", "All", "]"}]}], "]"}], ",",
+               RowBox[{"{",
+                RowBox[{"1", ",", "3"}], "}"}]}], "]"}], "\[Equal]", "0"}],
+            ")"}], "&"}], ",", "#", ",",
+          RowBox[{"{",
+           RowBox[{
+            RowBox[{"ArrayDepth", "@", "array"}], "-", "3"}], "}"}]}], "]"}],
+        "]"}], "&"}], ",",
+      RowBox[{
+       RowBox[{"(",
+        RowBox[{
+         RowBox[{"Total", "[",
+          RowBox[{
+           RowBox[{"Times", "[",
+            RowBox[{"#", ",",
+             RowBox[{"matX", "[", "All", "]"}]}], "]"}], ",",
+           RowBox[{"{",
+            RowBox[{"1", ",", "3"}], "}"}]}], "]"}], "\[Equal]",
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{
+            RowBox[{"ArrayDepth", "@", "array"}], ">", "3"}], ",", "0", ",",
+           "1"}], "]"}]}], ")"}], "&"}]}], "]"}], "@",
+    RowBox[{"Normal", "[", "array", "]"}]}]}], ";",
+  RowBox[{
+   RowBox[{"ConstraintEqnView", "::", "usage"}], "=",
+   "\"\<Show constraints as equations.\>\""}], ";"}]}], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->True],
+
+Cell[CellGroupData[{
+
+Cell["The constraint of independence; a list of 3-d arrays.", "ItemNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    UnderoverscriptBox["\[Sum]",
+     RowBox[{
+      StyleBox["s",
+       FontSlant->"Italic"], "=", "1"}],
+     SuperscriptBox["2",
+      StyleBox["K",
+       FontSlant->"Italic"]]],
+    SubsuperscriptBox[
+     StyleBox["x",
+      FontSlant->"Italic"],
+     StyleBox["s",
+      FontSlant->"Italic"],
+     StyleBox[
+      RowBox[{"\[Alpha]", "\[InvisibleComma]", "\[Beta]"}],
+      FontWeight->"Bold"]]}], "-",
+   RowBox[{
+    SuperscriptBox[
+     StyleBox["m",
+      FontSlant->"Italic"],
+     StyleBox["\[Beta]",
+      FontWeight->"Bold"]],
+    RowBox[{
+     UnderoverscriptBox["\[Sum]",
+      RowBox[{
+       StyleBox["s",
+        FontSlant->"Italic"], "=", "1"}],
+      SuperscriptBox["2",
+       StyleBox["K",
+        FontSlant->"Italic"]]],
+     SubsuperscriptBox[
+      StyleBox["x",
+       FontSlant->"Italic"],
+      StyleBox["s",
+       FontSlant->"Italic"],
+      StyleBox[
+       RowBox[{"\[Alpha]", "\[InvisibleComma]", "0"}],
+       FontWeight->"Bold"]]}]}]}], "\[Equal]",
+  "0"}]], "DisplayFormulaNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.},
+ TextAlignment->-0.5],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IndieA", "=",
+   RowBox[{
+    RowBox[{
+     RowBox[{"(",
+      RowBox[{
+       RowBox[{"SparseArray", "/@",
+        RowBox[{"Map", "[",
+         RowBox[{
+          RowBox[{"(",
+           RowBox[{"\[FormalY]", "\[Function]",
+            RowBox[{
+             RowBox[{"SparseArray", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{"Prepend", "[",
+                  RowBox[{
+                   RowBox[{"loc", "[", "\[FormalY]", "]"}], ",", "_"}], "]"}],
+                  "\[RuleDelayed]", "1"}], "}"}], ",",
+               RowBox[{"Prepend", "[",
+                RowBox[{"matICdim", ",",
+                 SuperscriptBox["2", "K"]}], "]"}]}], "]"}], "-",
+             RowBox[{"SparseArray", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{"Prepend", "[",
+                  RowBox[{
+                   RowBox[{"loc", "[",
+                    RowBox[{"\[FormalY]", "*",
+                    RowBox[{"{",
+                    RowBox[{"1", ",", "0"}], "}"}]}], "]"}], ",", "_"}],
+                  "]"}], "\[RuleDelayed]",
+                 RowBox[{"m", "[",
+                  RowBox[{"\[FormalY]", "\[LeftDoubleBracket]",
+                   RowBox[{"-", "1"}], "\[RightDoubleBracket]"}], "]"}]}],
+                "}"}], ",",
+               RowBox[{"Prepend", "[",
+                RowBox[{"matICdim", ",",
+                 SuperscriptBox["2", "K"]}], "]"}]}], "]"}]}]}], ")"}], ",",
+          RowBox[{"DeleteDuplicates", "[",
+           RowBox[{"Flatten", "[",
+            RowBox[{"#", ",", "1"}], "]"}], "]"}]}], "]"}]}], "/.",
+       RowBox[{"(",
+        RowBox[{
+         RowBox[{"SparseArray", "[",
+          RowBox[{
+           RowBox[{"{",
+            RowBox[{"_", "\[RuleDelayed]", "0"}], "}"}], ",",
+           RowBox[{"Prepend", "[",
+            RowBox[{"matICdim", ",",
+             SuperscriptBox["2", "K"]}], "]"}]}], "]"}], "\[Rule]",
+         "Nothing"}], ")"}]}], ")"}], "&"}], "@", "matIC"}]}], ";"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.},
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["The constraint of combinatorics; a list of 3-d arrays.", "ItemNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10001.}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    UnderoverscriptBox["\[Sum]",
+     RowBox[{
+      StyleBox["s",
+       FontSlant->"Italic"], "=", "1"}],
+     SuperscriptBox["2",
+      StyleBox["K",
+       FontSlant->"Italic"]]],
+    SubsuperscriptBox[
+     StyleBox["x",
+      FontSlant->"Italic"],
+     StyleBox["s",
+      FontSlant->"Italic"],
+     StyleBox[
+      RowBox[{"\[Alpha]", "\[InvisibleComma]", "0"}],
+      FontWeight->"Bold"]]}], "-",
+   RowBox[{
+    UnderoverscriptBox["\[Sum]",
+     RowBox[{
+      StyleBox["s",
+       FontSlant->"Italic"], "=", "1"}],
+     SuperscriptBox["2",
+      StyleBox["K",
+       FontSlant->"Italic"]]],
+    RowBox[{
+     UnderscriptBox["\[Sum]",
+      RowBox[{
+       RowBox[{"\[LeftBracketingBar]",
+        StyleBox["\[Gamma]",
+         FontWeight->"Bold"], "\[RightBracketingBar]"}], "\[LessEqual]",
+       RowBox[{"\[LeftBracketingBar]",
+        StyleBox["\[Alpha]",
+         FontWeight->"Bold"], "\[RightBracketingBar]"}]}]],
+     RowBox[{
+      SubsuperscriptBox[
+       StyleBox["g",
+        FontSlant->"Italic"],
+       RowBox[{
+        StyleBox["k",
+         FontSlant->"Italic"], "\[InvisibleComma]",
+        StyleBox["\[Alpha]",
+         FontWeight->"Bold"]}],
+       StyleBox["\[Gamma]",
+        FontWeight->"Bold"]],
+      SubsuperscriptBox["x", "s",
+       StyleBox["\[Gamma]",
+        FontWeight->"Bold"]]}]}]}]}], "\[Equal]",
+  "0"}]], "DisplayFormulaNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10001.},
+ TextAlignment->-0.5],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CombieA", "=",
+    RowBox[{
+     RowBox[{
+      RowBox[{"-",
+       RowBox[{"(",
+        RowBox[{
+         RowBox[{"SparseArray", "@",
+          RowBox[{"SparseArray", "[",
+           RowBox[{
+            RowBox[{
+             RowBox[{"Flatten", "[",
+              RowBox[{
+               RowBox[{"Table", "[",
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"CoefficientRules", "[",
+                   RowBox[{
+                    RowBox[{"Times", "@@",
+                    RowBox[{"(",
+                    RowBox[{
+                    SuperscriptBox[
+                    RowBox[{"(",
+                    RowBox[{"Table", "[",
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Indexed", "[",
+                    RowBox[{"\[FormalW]", ",", "\[FormalK]"}], "]"}], "+",
+                    RowBox[{"Indexed", "[",
+                    RowBox[{"\[FormalX]", ",", "\[FormalK]"}], "]"}]}], ",",
+                    RowBox[{"{",
+                    RowBox[{"\[FormalK]", ",", "1", ",", "K"}], "}"}]}],
+                    "]"}], ")"}], "#"], "/.",
+                    RowBox[{"Thread", "[",
+                    RowBox[{
+                    RowBox[{"Table", "[",
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Indexed", "[",
+                    RowBox[{"\[FormalW]", ",", "\[FormalK]"}], "]"}], "+",
+                    RowBox[{"Indexed", "[",
+                    RowBox[{"\[FormalX]", ",", "\[FormalK]"}], "]"}]}], ",",
+                    RowBox[{"{",
+                    RowBox[{"\[FormalK]", ",",
+                    RowBox[{"Position", "[",
+                    RowBox[{
+                    RowBox[{"IntegerDigits", "[",
+                    RowBox[{"\[FormalS]", ",", "2", ",", "K"}], "]"}], ",",
+                    "0"}], "]"}]}], "}"}]}], "]"}], "\[Rule]", "0"}], "]"}]}],
+                     ")"}]}], ",",
+                    RowBox[{
+                    RowBox[{"Table", "[",
+                    RowBox[{
+                    RowBox[{"Indexed", "[",
+                    RowBox[{"\[FormalW]", ",", "\[FormalK]"}], "]"}], ",",
+                    RowBox[{"{",
+                    RowBox[{"\[FormalK]", ",", "1", ",", "K"}], "}"}]}],
+                    "]"}], "~", "Join", "~",
+                    RowBox[{"Table", "[",
+                    RowBox[{
+                    RowBox[{"Indexed", "[",
+                    RowBox[{"\[FormalX]", ",", "\[FormalK]"}], "]"}], ",",
+                    RowBox[{"{",
+                    RowBox[{"\[FormalK]", ",", "1", ",", "K"}], "}"}]}],
+                    "]"}]}]}], "]"}], "/.",
+                  RowBox[{"(",
+                   RowBox[{
+                    RowBox[{"(",
+                    RowBox[{"list_", "\[Rule]", "coef_"}], ")"}],
+                    "\[RuleDelayed]",
+                    RowBox[{"(",
+                    RowBox[{
+                    RowBox[{"Prepend", "[",
+                    RowBox[{
+                    RowBox[{"loc", "[",
+                    RowBox[{"ArrayReshape", "[",
+                    RowBox[{"list", ",",
+                    RowBox[{"{",
+                    RowBox[{"2", ",", "K"}], "}"}]}], "]"}], "]"}], ",",
+                    RowBox[{"\[FormalS]", "+", "1"}]}], "]"}], "\[Rule]",
+                    RowBox[{"If", "[",
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"list", "\[LeftDoubleBracket]",
+                    RowBox[{";;", "K"}], "\[RightDoubleBracket]"}],
+                    "\[Equal]", "#"}], ",",
+                    RowBox[{"coef", "-", "1"}], ",", "coef"}], "]"}]}],
+                    ")"}]}], ")"}]}], ",",
+                 RowBox[{"{",
+                  RowBox[{"\[FormalS]", ",", "0", ",",
+                   RowBox[{
+                    SuperscriptBox["2", "K"], "-", "1"}]}], "}"}]}], "]"}],
+               ",", "1"}], "]"}], "~", "Join", "~",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"Prepend", "[",
+                RowBox[{
+                 RowBox[{"loc", "[",
+                  RowBox[{"{",
+                   RowBox[{"#", ",",
+                    RowBox[{"Table", "[",
+                    RowBox[{"0", ",", "K"}], "]"}]}], "}"}], "]"}], ",",
+                 "_"}], "]"}], "\[Rule]",
+               RowBox[{"-", "1"}]}], "}"}]}], ",",
+            RowBox[{"Prepend", "[",
+             RowBox[{"matICdim", ",",
+              SuperscriptBox["2", "K"]}], "]"}]}], "]"}]}], "/.",
+         RowBox[{"(",
+          RowBox[{
+           RowBox[{"SparseArray", "[",
+            RowBox[{
+             RowBox[{"{",
+              RowBox[{"_", "\[RuleDelayed]", "0"}], "}"}], ",",
+             RowBox[{"Prepend", "[",
+              RowBox[{"matICdim", ",",
+               SuperscriptBox["2", "K"]}], "]"}]}], "]"}], "\[Rule]",
+           "Nothing"}], ")"}]}], ")"}]}], "&"}], "/@",
+     RowBox[{"Rest", "[", "\[Alpha]IC", "]"}]}]}], ";"}], " "}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10001.},
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["The constraint of unitisation; a list of 3-d arrays.", "ItemNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   UnderoverscriptBox["\[Sum]",
+    RowBox[{
+     StyleBox["s",
+      FontSlant->"Italic"], "=", "1"}],
+    SuperscriptBox["2",
+     StyleBox["K",
+      FontSlant->"Italic"]]],
+   SubsuperscriptBox[
+    StyleBox["x",
+     FontSlant->"Italic"],
+    StyleBox["s",
+     FontSlant->"Italic"],
+    StyleBox[
+     RowBox[{"0", "\[InvisibleComma]", "0"}],
+     FontWeight->"Bold"]]}], "\[Equal]", "1"}]], "DisplayFormulaNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.},
+ TextAlignment->-0.5],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"UnieA", "=",
+   RowBox[{"SparseArray", "@",
+    RowBox[{"SparseArray", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Prepend", "[",
+        RowBox[{
+         RowBox[{"loc", "[",
+          RowBox[{"ConstantArray", "[",
+           RowBox[{"0", ",",
+            RowBox[{"{",
+             RowBox[{"2", ",", "K"}], "}"}]}], "]"}], "]"}], ",", "_"}],
+        "]"}], "\[Rule]", "1"}], ",",
+      RowBox[{"Prepend", "[",
+       RowBox[{"matICdim", ",",
+        SuperscriptBox["2", "K"]}], "]"}]}], "]"}]}]}], ";"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.},
+ InitializationCell->True],
+
+Cell[TextData[{
+ "Additional constraint due to coincident entries; ",
+ StyleBox["only one",
+  FontWeight->"Bold"],
+ " 3-d array."
+}], "ItemNumbered",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CoinA", "=",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"If", "[",
+       RowBox[{
+        RowBox[{"#", "\[NotEqual]",
+         RowBox[{"{", "}"}]}], ",", "SparseArray", ",", "Identity"}], "]"}],
+      "@",
+      RowBox[{"Flatten", "[",
+       RowBox[{"#", ",", "1"}], "]"}]}], "&"}], "@",
+    RowBox[{"(",
+     RowBox[{
+      RowBox[{"(",
+       RowBox[{"mat", "\[Function]", " ",
+        RowBox[{"If", "[",
+         RowBox[{
+          RowBox[{
+           RowBox[{"Length", "[", "mat", "]"}], ">", "2"}], ",",
+          RowBox[{
+           RowBox[{
+            RowBox[{"SparseArray", "[",
+             RowBox[{"#", ",", "matICdim"}], "]"}], "&"}], "/@",
+           RowBox[{"(",
+            RowBox[{
+             RowBox[{
+              RowBox[{"{",
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                 "mat", "\[LeftDoubleBracket]", "1",
+                  "\[RightDoubleBracket]"}], "\[Rule]", "1"}], ",",
+                RowBox[{"#", "\[Rule]",
+                 RowBox[{"-", "1"}]}]}], "}"}], "&"}], "/@",
+             RowBox[{"mat", "\[LeftDoubleBracket]",
+              RowBox[{"2", ";;",
+               RowBox[{"Ceiling", "[",
+                RowBox[{
+                 RowBox[{"Length", "[", "mat", "]"}], "/", "2"}], "]"}]}],
+              "\[RightDoubleBracket]"}]}], ")"}]}], ",", "Nothing"}], "]"}]}],
+        ")"}], "/@",
+      RowBox[{"(",
+       RowBox[{
+        RowBox[{
+         RowBox[{"Position", "[",
+          RowBox[{"matIC", ",", "#", ",", "2"}], "]"}], "&"}], "/@",
+        RowBox[{"DeleteDuplicates", "[",
+         RowBox[{"Flatten", "[",
+          RowBox[{"matIC", ",", "1"}], "]"}], "]"}]}], ")"}]}], ")"}]}]}],
+  ";"}]], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10002.},
+ InitializationCell->True]
+}]]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Results", "Section"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"{",
+  RowBox[{
+   RowBox[{"matICdim", "//", "First"}], ",", "\[IndentingNewLine]",
+   RowBox[{"CombieA", "//", "Length"}], ",", "\[IndentingNewLine]",
+   RowBox[{"IndieA", "//", "Length"}], ",", "\[IndentingNewLine]",
+   RowBox[{"UnieA", "//",
+    RowBox[{"1", "&"}]}], ",", "\[IndentingNewLine]",
+   RowBox[{"CoinA", "//", "Length"}]}], "}"}]], "Input"]
+}]],
+
+Cell[BoxData[{
+ RowBox[{"{",
+  RowBox[{"3", ",", "2", ",", "3", ",", "1", ",", "0"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"6", ",", "4", ",", "10", ",", "1", ",", "6"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"10", ",", "6", ",", "21", ",", "1", ",", "27"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"5", ",", "5", ",", "9", ",", "1", ",", "0"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"15", ",", "14", ",", "55", ",", "1", ",", "50"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"35", ",", "27", ",", "182", ",", "1", ",", "420"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"7", ",", "9", ",", "18", ",", "1", ",", "0"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"28", ",", "34", ",", "175", ",", "1", ",", "196"}],
+  "}"}], "\[IndentingNewLine]",
+ RowBox[{"{",
+  RowBox[{"84", ",", "83", ",", "840", ",", "1", ",", "2646"}],
+  "}"}]}], "Input"]
+}]]
+}]]
+}]
+(* End of Notebook Content *)
