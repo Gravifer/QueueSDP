@@ -10,9 +10,8 @@
 (* Version: 0.2.0 *)
 
 
-Package["QueueSDP`"]
-(* ClearAll[Evaluate[Context[] <> "*"]] *)
-ClearAll[ProcessMomentTruncation,QueueMomentTruncation];
+BeginPackage["QueueSDP`"]
+ClearAll[Evaluate[Context[] <> "*"]]
 
 
 (* ::Section:: *)
