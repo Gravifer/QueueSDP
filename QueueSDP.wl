@@ -10,8 +10,9 @@
 (* Version: 0.2.0 *)
 
 
-BeginPackage["QueueSDP`"]
-ClearAll[Evaluate[Context[] <> "*"]]
+Package["QueueSDP`"]
+(* ClearAll[Evaluate[Context[] <> "*"]] *)
+ClearAll[ProcessMomentTruncation,QueueMomentTruncation];
 
 
 (* ::Section:: *)
@@ -20,7 +21,6 @@ ClearAll[Evaluate[Context[] <> "*"]]
 
 (* ::Section:: *)
 (*Definitions*)
-QueueRelaxedRepresentation[]:=Identity
 
 Begin["`Private`"]
 ClearAll[Evaluate[Context[] <> "*"]]

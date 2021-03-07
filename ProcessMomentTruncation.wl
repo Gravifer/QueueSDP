@@ -12,49 +12,49 @@
 
 BeginPackage["QueueSDP`"] (*Using new-style package specification*)
 (* ClearAll[Evaluate[Context[] <> "*"]] *)
-ClearAll[DistributionMomentTruncation];
-ClearAll[$DistributionDomainCanonicalizer,
-         $DistributionDomainStylizer,
-         $DistributionMomentTruncationSummaryThumbnail];
-ClearAll[canonicalizeDistributionMomentTruncation,
-             validateDistributionMomentTruncation,
-          instantiateDistributionMomentTruncation]
-ClearAll[DistributionMomentTruncationQ,
-      NotDistributionMomentTruncationQ]
+ClearAll[ProcessMomentTruncation];
+ClearAll[$ProcessDomainCanonicalizer,
+         $ProcessDomainStylizer,
+         $ProcessMomentTruncationSummaryThumbnail];
+ClearAll[canonicalizeProcessMomentTruncation,
+             validateProcessMomentTruncation,
+          instantiateProcessMomentTruncation]
+ClearAll[ProcessMomentTruncationQ,
+      NotProcessMomentTruncationQ]
 
 
-PackageExport["DistributionMomentTruncation"]
-PackageExport["DistributionMomentTruncationQ"]
-PackageExport["NotDistributionMomentTruncationQ"]
+PackageExport["ProcessMomentTruncation"]
+PackageExport["ProcessMomentTruncationQ"]
+PackageExport["NotProcessMomentTruncationQ"]
 
 
-PackageScope["$DistributionDomainCanonicalizer"]
-PackageScope["$DistributionDomainStylizer"]
-PackageScope["$DistributionMomentTruncationSummaryThumbnail"]
-PackageScope["canonicalizeDistributionMomentTruncation"]
-PackageScope["validateDistributionMomentTruncation"]
-PackageScope["instantiateDistributionMomentTruncation"]
+PackageScope["$ProcessDomainCanonicalizer"]
+PackageScope["$ProcessDomainStylizer"]
+PackageScope["$ProcessMomentTruncationSummaryThumbnail"]
+PackageScope["canonicalizeProcessMomentTruncation"]
+PackageScope["validateProcessMomentTruncation"]
+PackageScope["instantiateProcessMomentTruncation"]
 
 
 (* ::Section:: *)
 (*Usage messages*)
 
 
-DistributionMomentTruncation::nocanon="Cannot construct a valid DistributionMomentTruncation from the given options `1`.";
-DistributionMomentTruncation::noentry="Cannot construct a valid DistributionMomentTruncation because the entry `1` is not provided and cannot be inferred.";
-DistributionMomentTruncation::noimplm="The required feature `1` is not implemented yet.";
-DistributionMomentTruncation::excdtrnc="The `1`-th moment exceeds the order of the truncation.";
+ProcessMomentTruncation::nocanon="Cannot construct a valid ProcessMomentTruncation from the given options `1`.";
+ProcessMomentTruncation::noentry="Cannot construct a valid ProcessMomentTruncation because the entry `1` is not provided and cannot be inferred.";
+ProcessMomentTruncation::noimplm="The required feature `1` is not implemented yet.";
+ProcessMomentTruncation::excdtrnc="The `1`-th moment exceeds the order of the truncation.";
 
 
 (* ::Section:: *)
 (*Definitions*)
 
 
-Options[DistributionMomentTruncation] = {(*This allow for setting default values; when initializing a truncation, unaccessed entries should be deleted*)
-  "TruncationOrder"      -> None, (*positive integer; major parameter*)
-  "OriginalDistribution" -> None, (*if supplied, the moment sequence is always generated using the moment function of the original distribution; there may be need for memoisation*)
-  "MarginalProperty"     -> None, (* None|"Independent"|"Identical" *)
-  "MomentForm" -> "Moment", (* "Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant", following the specification of MomentConvert;*)(* TODO: may also support truncated probability sequence in the future*)
+Options[ProcessMomentTruncation] = {(*This allow for setting default values; when initializing a truncation, unaccessed entries should be deleted*)
+  "TruncationOrder" -> None, (*positive integer; major parameter*)
+  "OriginalProcess" -> None, (*if supplied, the moment sequence is always generated using the moment function of the original distribution; there may be need for memoisation*)
+  "MarginalProperty"-> None, (* None|"Independent"|"Identical" *)
+  "MomentForm"  -> "Moment", (* "Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant", following the specification of MomentConvert;*)(* TODO: may also support truncated probability sequence in the future*)
   "MomentData"      -> None,
   "MomentDataShape" -> None, (* "Full"|"Overall"|"Function"; "Full" should be assumed. Only meaningful for multi-dimensional distributions when "MarginalProperty" -> None.*)
   "Domain" -> None
@@ -73,9 +73,9 @@ Options[DistributionMomentTruncation] = {(*This allow for setting default values
 (*No truncation returns usual distribution computations*)
 
 
-DistributionMomentTruncation[dist_?DistributionParameterQ]:=dist
-DistributionMomentTruncation[
-  dist_?DistributionParameterQ,
+ProcessMomentTruncation[dist_?ProcessParameterQ]:=dist
+ProcessMomentTruncation[
+  dist_?ProcessParameterQ,
   type:"Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant"
 ][r_]:=Symbol[type][dist,r]
 
@@ -84,30 +84,30 @@ DistributionMomentTruncation[
 (*Valid truncation specification*)
 
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   trunc_Integer?Positive|trunc_Symbol|trunc:Infinity,
   type:"Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant":"Moment",
   ops:OptionsPattern[]
-][dist_?DistributionParameterQ] := DistributionMomentTruncation[trunc, dist, type, ops]
+][dist_?ProcessParameterQ] := ProcessMomentTruncation[trunc, dist, type, ops]
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   trunc_Integer?Positive|trunc_Symbol,
-  dist_?DistributionParameterQ,
+  dist_?ProcessParameterQ,
   type:"Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant":"Moment",
   ops:OptionsPattern[]
-] := DistributionMomentTruncation[trunc, dist,
+] := ProcessMomentTruncation[trunc, dist,
   "MomentForm" -> type,
-  Sequence@@FilterRules[{ops}, Except["TruncationOrder"|"OriginalDistribution"|"MomentForm"|"MomentData"|"MomentDataShape"]]
+  Sequence@@FilterRules[{ops}, Except["TruncationOrder"|"OriginalProcess"|"MomentForm"|"MomentData"|"MomentDataShape"]]
 ]
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   trunc_Integer?Positive|trunc_Symbol,
-  dist_?DistributionParameterQ,
+  dist_?ProcessParameterQ,
   ops:OptionsPattern[]
-] := DistributionMomentTruncation[
+] := ProcessMomentTruncation[
   "TruncationOrder" -> trunc,
-  "OriginalDistribution" -> dist,
-  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalDistribution"|"MomentData"|"MomentDataShape"]]
+  "OriginalProcess" -> dist,
+  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalProcess"|"MomentData"|"MomentDataShape"]]
 ]
 
 
@@ -115,31 +115,31 @@ DistributionMomentTruncation[
 (*Infinite truncation casts to the original distribution*)
 
 
-DistributionMomentTruncation[Infinity, dist_?DistributionParameterQ, ops:OptionsPattern[]]:=dist
+ProcessMomentTruncation[Infinity, dist_?ProcessParameterQ, ops:OptionsPattern[]]:=dist
 
 
 (* ::ItemNumbered:: *)
 (*From a moment function*)
 
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   trunc_Integer?Positive|trunc_Symbol|trunc:Infinity,
   moments_Function|moments_Symbol,
   type:"Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant":"Moment",
   ops:OptionsPattern[]
-] := DistributionMomentTruncation[trunc, moments,
+] := ProcessMomentTruncation[trunc, moments,
   "MomentForm" -> type,
-  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalDistribution"|"MomentForm"|"MomentData"|"MomentDataShape"]]
+  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalProcess"|"MomentForm"|"MomentData"|"MomentDataShape"]]
 ]
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   trunc_Integer?Positive|trunc_Symbol|trunc:Infinity,
   moments_Function|moments_Symbol,
   ops:OptionsPattern[]
-] := DistributionMomentTruncation[
+] := ProcessMomentTruncation[
   "TruncationOrder" -> trunc,
   "MomentData" -> moments,
   "MomentDataShape" -> "Function",
-  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalDistribution"|"MomentData"|"MomentDataShape"]]
+  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalProcess"|"MomentData"|"MomentDataShape"]]
 ]
 
 
@@ -147,13 +147,13 @@ DistributionMomentTruncation[
 (*From a moment array*)
 
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   moments_?VectorQ,
   ops:OptionsPattern[{
     "Domain" -> Interval[{-\[Infinity], \[Infinity]}], (*default to a 1-d distribution*)
-    DistributionMomentTruncation
+    ProcessMomentTruncation
   }]
-] := DistributionMomentTruncation[
+] := ProcessMomentTruncation[
   "TruncationOrder" -> Length[moments],
   "MomentData" -> moments,
   "Domain" -> OptionValue["Domain"],
@@ -161,14 +161,14 @@ DistributionMomentTruncation[
     Unevaluated@Sequence[],
     "MarginalProperty" -> "Identical"
   ],
-  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalDistribution"|"MomentData"|"Domain"|"MarginalProperty"]]
+  Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalProcess"|"MomentData"|"Domain"|"MarginalProperty"]]
 ]
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   moments_?MatrixQ,(*This is primarily for independent margins*)
   ops:OptionsPattern[{
     "Domain"->None,
-    DistributionMomentTruncation
+    ProcessMomentTruncation
   }]
 ] := Module[{domain = OptionValue["Domain"]},
   If[SquareMatrixQ[moments]
@@ -180,53 +180,53 @@ DistributionMomentTruncation[
         ), (*handle the case when the distribution happens to be 2-d*)
     If[domain===None, 
       domain = Table[Interval[{-\[Infinity], \[Infinity]}], 2]
-    ]; DistributionMomentTruncation[
+    ]; ProcessMomentTruncation[
       "TruncationOrder" -> Length[moments]-1, (*note this*)
       "MomentData" -> moments,
       "Domain" -> domain,
       "MarginalProperty" -> None,
-      Sequence@@FilterRules[{ops}, Except["TruncationOrder"|"OriginalDistribution"|"MomentData"|"Domain"|"MarginalProperty"]]
+      Sequence@@FilterRules[{ops}, Except["TruncationOrder"|"OriginalProcess"|"MomentData"|"Domain"|"MarginalProperty"]]
     ], (*otherwise, it must be the "MarginalProperty"->"Independent" case*)
     If[domain===None, 
       domain = Table[Interval[{-\[Infinity], \[Infinity]}], Length[moments]]
-    ]; DistributionMomentTruncation[
+    ]; ProcessMomentTruncation[
       "TruncationOrder" -> Length[moments],
       "MomentData" -> moments,
       "Domain" -> domain,
       "MarginalProperty" -> "Independent",
-      Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalDistribution"|"MomentData"|"Domain"|"MarginalProperty"]]
+      Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalProcess"|"MomentData"|"Domain"|"MarginalProperty"]]
     ]
   ]
 ]
 
-DistributionMomentTruncation[
+ProcessMomentTruncation[
   moments_?ArrayQ, (*currently, only "MomentDataShape"->"Full" is supported*)
   ops:OptionsPattern[{
     "Domain"->None,
-    DistributionMomentTruncation
+    ProcessMomentTruncation
   }]
 ] := Module[{domain = If[OptionValue["Domain"]===None,
               Table[Interval[{-\[Infinity], \[Infinity]}],
               ArrayDepth[moments]]
               ]},
-  DistributionMomentTruncation[
+  ProcessMomentTruncation[
     "TruncationOrder" -> Length[moments]-1, (*note this*)
     "MomentData"  -> moments,
     "MomentDataShape" -> "Full",
     "Domain" -> domain,
     "MarginalProperty" -> None,
-    Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalDistribution"|"MomentData"|"Domain"|"MarginalProperty"]]
+    Sequence@@FilterRules[{ops},Except["TruncationOrder"|"OriginalProcess"|"MomentData"|"Domain"|"MarginalProperty"]]
   ]
 ]
 
-DistributionMomentTruncation[ops:OptionsPattern[]] := DistributionMomentTruncation[canonicalizeDistributionMomentTruncation[ops]]
+ProcessMomentTruncation[ops:OptionsPattern[]] := ProcessMomentTruncation[canonicalizeProcessMomentTruncation[ops]]
 
 
 (* ::Item:: *)
 (*Canonicalize the Truncation*)
 
 
-$DistributionDomainCanonicalizer=Dispatch@{
+$ProcessDomainCanonicalizer=Dispatch@{
   Reals               -> Interval[{-\[Infinity],  \[Infinity]}],
   Integers            ->         ( -\[Infinity];; \[Infinity] ),
   NonNegativeReals    -> Interval[{ 0          ,  \[Infinity]}],
@@ -236,22 +236,22 @@ $DistributionDomainCanonicalizer=Dispatch@{
   PositiveIntegers    ->         (  1          ;; \[Infinity] ),
   NegativeIntegers    ->         ( -\[Infinity];;-1           ) };
 
-canonicalizeDistributionMomentTruncation[ops:OptionsPattern[DistributionMomentTruncation]]:=Which[
+canonicalizeProcessMomentTruncation[ops:OptionsPattern[ProcessMomentTruncation]]:=Which[
   Length@{ops}<1,
-    Message[DistributionMomentTruncation::nocanon,{ops}];
+    Message[ProcessMomentTruncation::nocanon,{ops}];
     $Failed,
   OptionValue["MomentDataShape"]==="Function" && (OptionValue["Domain"]===None),
-    Message[DistributionMomentTruncation::noentry,{"Domain"}];
+    Message[ProcessMomentTruncation::noentry,{"Domain"}];
     $Failed,
   True,
     Module[{truncdata={ops}},
       If[OptionValue["MomentDataShape"]==="Overall",
-        Message[DistributionMomentTruncation::noimplm, "MomentDataShape" -> "Overall"];
+        Message[ProcessMomentTruncation::noimplm, "MomentDataShape" -> "Overall"];
         AppendTo[truncdata, "MomentDataShape" -> "Full"]
       ];
-      AppendTo[truncdata, "Domain" -> OptionValue["Domain"]/.$DistributionDomainCanonicalizer];
-      If[DistributionParameterQ[OptionValue["OriginalDistribution"]],
-        AppendTo[truncdata, "Domain" -> DistributionDomain[OptionValue["OriginalDistribution"]]]
+      AppendTo[truncdata, "Domain" -> OptionValue["Domain"]/.$ProcessDomainCanonicalizer];
+      If[ProcessParameterQ[OptionValue["OriginalProcess"]],
+        AppendTo[truncdata, "Domain" -> ProcessDomain[OptionValue["OriginalProcess"]]]
       ];
       AppendTo[truncdata, "MomentForm" -> OptionValue["MomentForm"]];
       Sort@Association[truncdata]
@@ -263,31 +263,31 @@ canonicalizeDistributionMomentTruncation[ops:OptionsPattern[DistributionMomentTr
 (*Validators*)
 
 
-(*#TODO: make some validators so you can always be sure you have a valid DistributionMomentTruncation without constantly having to check it*)
-validateDistributionMomentTruncation[assoc_Association]:=And[
+(*#TODO: make some validators so you can always be sure you have a valid ProcessMomentTruncation without constantly having to check it*)
+validateProcessMomentTruncation[assoc_Association]:=And[
   Length[assoc] > 0,
   Match[ assoc, KeyValuePattern["TruncationOrder"->Integer?Positive]],
   Match[ assoc, KeyValuePattern["Domain"         ->Except[None]    ]]
 ](*reimplement this*)
 
-DistributionMomentTruncation[assoc_Association]?NotDistributionMomentTruncationQ :=
-  System`Private`HoldSetValid[DistributionMomentTruncation[assoc]]/;validateDistributionMomentTruncation[assoc];
+ProcessMomentTruncation[assoc_Association]?NotProcessMomentTruncationQ :=
+  System`Private`HoldSetValid[ProcessMomentTruncation[assoc]]/;validateProcessMomentTruncation[assoc];
 
-DistributionMomentTruncationQ[distrlx_] := System`Private`HoldValidQ[distrlx];
-DistributionMomentTruncationQ[_] := False;
-DistributionMomentTruncationQ[symbol_Symbol] := (
-  Head[symbol]===DistributionMomentTruncation
-  && DistributionMomentTruncationQ[Evaluate[symbol]]
+ProcessMomentTruncationQ[distrlx_] := System`Private`HoldValidQ[distrlx];
+ProcessMomentTruncationQ[_] := False;
+ProcessMomentTruncationQ[symbol_Symbol] := (
+  Head[symbol]===ProcessMomentTruncation
+  && ProcessMomentTruncationQ[Evaluate[symbol]]
 );
-DistributionMomentTruncationQ~SetAttributes~HoldFirst;
+ProcessMomentTruncationQ~SetAttributes~HoldFirst;
 
-NotDistributionMomentTruncationQ[distrlx_] := Not[DistributionMomentTruncationQ[distrlx]];
-NotDistributionMomentTruncationQ~SetAttributes~HoldFirst;
+NotProcessMomentTruncationQ[distrlx_] := Not[ProcessMomentTruncationQ[distrlx]];
+NotProcessMomentTruncationQ~SetAttributes~HoldFirst;
 
 
 
-instantiateDistributionMomentTruncation[
-  distrlx_DistributionMomentTruncation,
+instantiateProcessMomentTruncation[
+  distrlx_ProcessMomentTruncation,
   ops:OptionsPattern[]
 ] := Missing["NotAvailable"] (*#TODO: Default to naive polynomial moment matching; possible alternatives including orthogonal polynomials, piecewise-constant (histogram), point-masses, smooth-kernel distributions.*)
 
@@ -296,18 +296,18 @@ instantiateDistributionMomentTruncation[
 (*Accessors*)
 
 
-DistributionMomentTruncation[a_Association]["Moment"][0]:=1
-DistributionMomentTruncation[a_Association]["Moment"][r___] /; KeyMemberQ[a,"OriginalDistribution"] := (
-  If[Max[r] > a["TruncationOrder"], Message[DistributionMomentTruncation::excdtrnc, r]];
-  Moment[a["OriginalDistribution"], r]
+ProcessMomentTruncation[a_Association]["Moment"][0]:=1
+ProcessMomentTruncation[a_Association]["Moment"][r___] /; KeyMemberQ[a,"OriginalProcess"] := (
+  If[Max[r] > a["TruncationOrder"], Message[ProcessMomentTruncation::excdtrnc, r]];
+  Moment[a["OriginalProcess"], r]
 )
 
-DistributionMomentTruncation[a_Association]["Moment"][r___] /; (a["MomentDataShape"]==="Function")  := (
-  If[Max[r] > a["TruncationOrder"], Message[DistributionMomentTruncation::excdtrnc, r]];
+ProcessMomentTruncation[a_Association]["Moment"][r___] /; (a["MomentDataShape"]==="Function")  := (
+  If[Max[r] > a["TruncationOrder"], Message[ProcessMomentTruncation::excdtrnc, r]];
   a["MomentData"][r]
 )
 
-DistributionMomentTruncation[a_Association]["Moment"][
+ProcessMomentTruncation[a_Association]["Moment"][
   {r:Repeated[_Integer?Positive, 
       {SequenceCount[a["Domain"], _Interval|_Span]}
     ]}
@@ -316,18 +316,18 @@ DistributionMomentTruncation[a_Association]["Moment"][
         Total,
         Max
       ][{r}] > a["TruncationOrder"],
-    Message[DistributionMomentTruncation::excdtrnc, r]; Missing["Indeterminate"],
+    Message[ProcessMomentTruncation::excdtrnc, r]; Missing["Indeterminate"],
     a["MomentData"][[r]]
   ]
 )
 
-DistributionMomentTruncation[a_Association]["Moment"][
+ProcessMomentTruncation[a_Association]["Moment"][
   {r:Repeated[_Integer?Positive,
       {SequenceCount[a["Domain"], _Interval|_Span]}
     ]}
 ] /; (MatchQ[a, KeyValuePattern["MarginalProperty"->"Independent"]]) := (
   If[Max[r] > a["TruncationOrder"],
-    Message[DistributionMomentTruncation::excdtrnc, r]; Missing["Indeterminate"],
+    Message[ProcessMomentTruncation::excdtrnc, r]; Missing["Indeterminate"],
     Times@@MapThread[Construct, {
       Extract/@{r},
       a["MomentData"]
@@ -335,55 +335,55 @@ DistributionMomentTruncation[a_Association]["Moment"][
   ]
 )
 
-DistributionMomentTruncation[a_Association]["Moment"][
+ProcessMomentTruncation[a_Association]["Moment"][
   {r:Repeated[_Integer?Positive,
       {SequenceCount[a["Domain"], _Interval|_Span]}
     ]}
 ] /; (MatchQ[a, KeyValuePattern["MarginalProperty"->"Identical"]]) := (
   If[Max[r]>a["TruncationOrder"],
-    Message[DistributionMomentTruncation::excdtrnc, r]; Missing["Indeterminate"],
+    Message[ProcessMomentTruncation::excdtrnc, r]; Missing["Indeterminate"],
     Times@@a["MomentData"][{r}]
   ]
 )
 
-DistributionMomentTruncation[a_Association]["Moment"][r_Integer?Positive] /; MatchQ[a, KeyValuePattern["Domain"->(_Interval|_Span)]] :=
-  DistributionMomentTruncation[a]["Moment"][{r}]
+ProcessMomentTruncation[a_Association]["Moment"][r_Integer?Positive] /; MatchQ[a, KeyValuePattern["Domain"->(_Interval|_Span)]] :=
+  ProcessMomentTruncation[a]["Moment"][{r}]
 
-DistributionMomentTruncation[a_Association]["Properties"] := Sort@Keys[a]
-DistributionMomentTruncation[a_Association][key___] := a[key]
+ProcessMomentTruncation[a_Association]["Properties"] := Sort@Keys[a]
+ProcessMomentTruncation[a_Association][key___] := a[key]
 
 
 (* ::Subsubsection:: *)
 (*Formatting*)
 
 
-$DistributionMomentTruncationSummaryThumbnail = 
+$ProcessMomentTruncationSummaryThumbnail = 
   DensityPlot[1-Exp[-5 (y-(.2+0.5E^(-8 (x+.5)^2)+1.0E^(-10 (x-.3)^2)))^2], {x,-1.,1.}, {y,0,2},
     PlotRange -> {{-1.,1.},{0.,2.}},
     AspectRatio -> 1,
     Frame -> None,
     PlotTheme -> "Monochrome"
   ];
-$DistributionDomainStylizer = Dispatch[Reverse/@Normal[$DistributionDomainCanonicalizer]];
+$ProcessDomainStylizer = Dispatch[Reverse/@Normal[$ProcessDomainCanonicalizer]];
 
-SyntaxInformation[DistributionMomentTruncation] = {
+SyntaxInformation[ProcessMomentTruncation] = {
   "ArgumentsPattern" -> {___,OptionsPattern[]},
-  "OptionNames" -> ToString/@First/@Options[DistributionMomentTruncation]
+  "OptionNames" -> ToString/@First/@Options[ProcessMomentTruncation]
 };
 
-Format[DistributionMomentTruncation[a_Association]?DistributionMomentTruncationQ, StandardForm] := Block[{},
+Format[ProcessMomentTruncation[a_Association]?ProcessMomentTruncationQ, StandardForm] := Block[{},
   RawBoxes@BoxForm`ArrangeSummaryBox[
-    DistributionMomentTruncation,
-    DistributionMomentTruncation[a],
-    $DistributionMomentTruncationSummaryThumbnail,
+    ProcessMomentTruncation,
+    ProcessMomentTruncation[a],
+    $ProcessMomentTruncationSummaryThumbnail,
     { { BoxForm`MakeSummaryItem[{"TruncationOrder"     <>": ", a["TruncationOrder"]                    }, StandardForm],
-        BoxForm`MakeSummaryItem[{"Domain"              <>": ", a["Domain"]/.$DistributionDomainStylizer}, StandardForm]},
+        BoxForm`MakeSummaryItem[{"Domain"              <>": ", a["Domain"]/.$ProcessDomainStylizer}, StandardForm]},
       If[KeyMemberQ[a,"MomentForm"]&&a["MomentForm"]=!="Moment",{
         BoxForm`MakeSummaryItem[{"MomentForm"          <>": ", a["MomentForm"]                         }, StandardForm], SpanFromLeft},
         Unevaluated@Sequence[]
       ],
-      If[KeyMemberQ[a,"OriginalDistribution"],{
-        BoxForm`MakeSummaryItem[{"OriginalDistribution"<>": ", a["OriginalDistribution"]               }, StandardForm], SpanFromLeft},
+      If[KeyMemberQ[a,"OriginalProcess"],{
+        BoxForm`MakeSummaryItem[{"OriginalProcess"<>": ", a["OriginalProcess"]               }, StandardForm], SpanFromLeft},
         Unevaluated@Sequence[]
       ],
       If[KeyMemberQ[a,"MarginalProperty"] && a["MarginalProperty"]=!=None,{
