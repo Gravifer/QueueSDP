@@ -1,0 +1,2111 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Queue-SDP-OOP", "Title"],
+
+Cell[CellGroupData[{
+
+Cell["Preamble", "Subsubsection",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+
+Cell[BoxData[{
+ RowBox[{
+  InterpretationBox[
+   TagBox[
+    DynamicModuleBox[{Typeset`open = False},
+     FrameBox[
+      PaneSelectorBox[{False->GridBox[{
+         {
+          PaneBox[GridBox[{
+             {
+              StyleBox[
+               StyleBox[
+                AdjustmentBox["\<\"[\[FilledSmallSquare]]\"\>",
+                 BoxBaselineShift->-0.25,
+                 BoxMargins->{{0, 0}, {-1, -1}}], "ResourceFunctionIcon",
+
+                FontColor->RGBColor[
+                 0.8745098039215686, 0.2784313725490196, 0.03137254901960784]],
+               ShowStringCharacters->False,
+               FontFamily->"Source Sans Pro Black",
+               FontSize->0.6538461538461539 Inherited,
+               FontWeight->"Heavy",
+               PrivateFontOptions->{"OperatorSubstitution"->False}],
+              StyleBox[
+               RowBox[{
+                StyleBox["DarkMode", "ResourceFunctionLabel"], " "}],
+               ShowAutoStyles->False,
+               ShowStringCharacters->False,
+               FontSize->Rational[12, 13] Inherited,
+               FontColor->GrayLevel[0.1]]}
+            },
+            GridBoxSpacings->{"Columns" -> {{0.25}}}],
+           Alignment->Left,
+           BaseStyle->{LineSpacing -> {0, 0}, LineBreakWithin -> False},
+           BaselinePosition->Baseline,
+           FrameMargins->{{3, 0}, {0, 0}}],
+          ItemBox[
+           PaneBox[
+            TogglerBox[Dynamic[Typeset`open], {True->
+
+             DynamicBox[FEPrivate`FrontEndResource[
+              "FEBitmaps", "IconizeCloser"],
+              ImageSizeCache->{8.25, {1., 7.25}}], False->
+
+             DynamicBox[FEPrivate`FrontEndResource[
+              "FEBitmaps", "IconizeOpener"],
+              ImageSizeCache->{8.25, {1., 7.25}}]},
+             Appearance->None,
+             BaselinePosition->Baseline,
+             ContentPadding->False,
+             FrameMargins->0],
+            Alignment->Left,
+            BaselinePosition->Baseline,
+            FrameMargins->{{1, 1}, {0, 0}}],
+           Frame->{{
+              RGBColor[
+              0.8313725490196079, 0.8470588235294118, 0.8509803921568627,
+               0.5], False}, {False, False}}]}
+        },
+        BaselinePosition->{1, 1},
+        GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+        GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+        GridBoxSpacings->{"Columns" -> {{0}}, "Rows" -> {{0}}}], True->
+       GridBox[{
+         {GridBox[{
+            {
+             PaneBox[GridBox[{
+                {
+                 StyleBox[
+                  StyleBox[
+                   AdjustmentBox["\<\"[\[FilledSmallSquare]]\"\>",
+                    BoxBaselineShift->-0.25,
+                    BoxMargins->{{0, 0}, {-1, -1}}], "ResourceFunctionIcon",
+
+                   FontColor->RGBColor[
+                    0.8745098039215686, 0.2784313725490196,
+                    0.03137254901960784]],
+                  ShowStringCharacters->False,
+                  FontFamily->"Source Sans Pro Black",
+                  FontSize->0.6538461538461539 Inherited,
+                  FontWeight->"Heavy",
+                  PrivateFontOptions->{"OperatorSubstitution"->False}],
+                 StyleBox[
+                  RowBox[{
+                   StyleBox["DarkMode", "ResourceFunctionLabel"], " "}],
+                  ShowAutoStyles->False,
+                  ShowStringCharacters->False,
+                  FontSize->Rational[12, 13] Inherited,
+                  FontColor->GrayLevel[0.1]]}
+               },
+               GridBoxSpacings->{"Columns" -> {{0.25}}}],
+              Alignment->Left,
+              BaseStyle->{LineSpacing -> {0, 0}, LineBreakWithin -> False},
+              BaselinePosition->Baseline,
+              FrameMargins->{{3, 0}, {0, 0}}],
+             ItemBox[
+              PaneBox[
+               TogglerBox[Dynamic[Typeset`open], {True->
+
+                DynamicBox[FEPrivate`FrontEndResource[
+                 "FEBitmaps", "IconizeCloser"],
+                 ImageSizeCache->{9.9, {2., 7.9}}], False->
+
+                DynamicBox[FEPrivate`FrontEndResource[
+                 "FEBitmaps", "IconizeOpener"],
+                 ImageSizeCache->{9.9, {2., 7.9}}]},
+                Appearance->None,
+                BaselinePosition->Baseline,
+                ContentPadding->False,
+                FrameMargins->0],
+               Alignment->Left,
+               BaselinePosition->Baseline,
+               FrameMargins->{{1, 1}, {0, 0}}],
+              Frame->{{
+                 RGBColor[
+                 0.8313725490196079, 0.8470588235294118, 0.8509803921568627,
+                  0.5], False}, {False, False}}]}
+           },
+           BaselinePosition->{1, 1},
+           GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+           GridBoxSpacings->{"Columns" -> {{0}}, "Rows" -> {{0}}}]},
+         {
+          StyleBox[
+           PaneBox[GridBox[{
+              {
+               RowBox[{
+                TagBox["\<\"Version (latest): \"\>",
+                 "IconizedLabel"], " ",
+                TagBox["\<\"2.0.0\"\>",
+                 "IconizedItem"]}]},
+              {
+               TagBox[
+
+                TemplateBox[{
+                 "\"Documentation \[RightGuillemet]\"",
+                  "https://resources.wolframcloud.com/FunctionRepository/\
+resources/DarkMode"},
+                 "HyperlinkURL"],
+                "IconizedItem"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            Alignment->Left,
+            BaselinePosition->Baseline,
+            FrameMargins->{{5, 4}, {0, 4}}], "DialogStyle",
+           FontFamily->"Roboto",
+           FontSize->11]}
+        },
+        BaselinePosition->{1, 1},
+        GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+        GridBoxDividers->{"Columns" -> {{None}}, "Rows" -> {False, {
+             GrayLevel[0.8]}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]}, Dynamic[
+       Typeset`open],
+       BaselinePosition->Baseline,
+       ImageSize->Automatic],
+      Background->RGBColor[
+       0.9686274509803922, 0.9764705882352941, 0.984313725490196],
+      BaselinePosition->Baseline,
+      DefaultBaseStyle->{},
+      FrameMargins->{{0, 0}, {1, 0}},
+      FrameStyle->RGBColor[
+       0.8313725490196079, 0.8470588235294118, 0.8509803921568627],
+      RoundingRadius->4]],
+    {"FunctionResourceBox",
+     RGBColor[0.8745098039215686, 0.2784313725490196, 0.03137254901960784],
+     "DarkMode"},
+    TagBoxNote->"FunctionResourceBox"],
+   ResourceFunction[
+    ResourceObject[
+     Association[
+     "Name" -> "DarkMode", "ShortName" -> "DarkMode", "UUID" ->
+      "6ae9b15e-dd80-4d11-be6e-434bf9ac9265", "ResourceType" -> "Function",
+      "Version" -> "2.0.0", "Description" ->
+      "Restyle notebooks into dark mode", "RepositoryLocation" ->
+      URL["https://www.wolframcloud.com/objects/resourcesystem/api/1.0"],
+      "SymbolName" ->
+      "FunctionRepository`$f2abd2063089401aafe135eb354a8d92`DarkMode",
+      "FunctionLocation" ->
+      CloudObject[
+       "https://www.wolframcloud.com/obj/91755122-26ae-43f1-8e41-\
+4043472dcf8a"]], ResourceSystemBase -> Automatic]],
+   Selectable->False], ";"}], "\[IndentingNewLine]",
+ RowBox[{"SetOptions", "[",
+  RowBox[{
+   RowBox[{"SelectedNotebook", "[", "]"}], ",",
+   RowBox[{"PrintingStyleEnvironment", "\[Rule]", "\"\<Printout\>\""}], ",",
+   RowBox[{"ShowSyntaxStyles", "\[Rule]", "True"}]}],
+  "]"}], "\[IndentingNewLine]",
+ RowBox[{"ClearAll", "[",
+  RowBox[{"Evaluate", "[",
+   RowBox[{
+    RowBox[{"ToString", "[",
+     RowBox[{"Context", "[", "]"}], "]"}], "<>", "\"\<*\>\""}], "]"}],
+  "]"}]}], "Input",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Definitions-OOP", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Related Symbols", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Names", "[", "\"\<*Process*\>\"", "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Names", "[", "\"\<*Distribution*\>\"", "]"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"MapThread", "[",
+  RowBox[{"Construct", ",",
+   RowBox[{"{",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{"f", ",", "g", ",", "h"}], "}"}], ",",
+     RowBox[{"{",
+      RowBox[{"a", ",", "b", ",", "c"}], "}"}]}], "}"}]}], "]"}]], "Input"]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Algebra", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", "Algebra", "]"}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "Algebra", "]"}], "=",
+   RowBox[{"{",
+    RowBox[{
+     RowBox[{"\"\<MultTable\>\"", "\[Rule]", "None"}], ",",
+     RowBox[{"\"\<Generators\>\"", "\[Rule]", "None"}], ",",
+     RowBox[{"\"\<Dimension\>\"", "\[Rule]", "None"}]}], "}"}]}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Algebra", "[",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=",
+    RowBox[{"Algebra", "[",
+     RowBox[{"canonicalizeAlgebraData", "[", "ops", "]"}], "]"}]}], ";"}],
+  "\n",
+  RowBox[{"(*",
+   RowBox[{
+   "do", " ", "the", " ", "minimum", " ", "work", " ", "necessary", " ", "to",
+     " ", "make", " ", "sure", " ", "all", " ", "the", " ", "data", " ",
+    "for", " ", "the", " ", "Algebra", " ", "is", " ", "there"}],
+   "*)"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"canonicalizeAlgebraData", "[",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=",
+   RowBox[{"Association", "[", "ops", "]"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "make", " ", "some", " ", "validators", " ", "so", " ", "you", " ", "can",
+    " ", "always", " ", "be", " ", "sure", " ", "you", " ", "have", " ", "a",
+    " ", "valid", " ", "algebra", " ", "without", " ", "constantly", " ",
+    "having", " ", "to", " ", "check", " ", "it"}], "*)"}],
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"validateAlgebraData", "[", "a_Association", "]"}], ":=",
+     RowBox[{
+      RowBox[{"Length", "[", "a", "]"}], ">", "0"}]}], ";",
+    RowBox[{"(*",
+     RowBox[{"reimplement", " ", "this"}], "*)"}],
+    RowBox[{
+     RowBox[{
+      RowBox[{"Algebra", "[", "a_Association", "]"}], "?", "NotAlgebraQ"}], ":=",
+     RowBox[{
+      RowBox[{"System`Private`HoldSetValid", "[",
+       RowBox[{"Algebra", "[", "a", "]"}], "]"}], "/;",
+      RowBox[{"validateAlgebraData", "[", "a", "]"}]}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"AlgebraQ", "[", "a_Algebra", "]"}], ":=",
+     RowBox[{"System`Private`HoldValidQ", "[", "a", "]"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"AlgebraQ", "[", "_", "]"}], ":=", "False"}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"AlgebraQ", "[", "s_Symbol", "]"}], ":=",
+     RowBox[{"(",
+      RowBox[{
+       RowBox[{
+        RowBox[{"Head", "[", "s", "]"}], "===", "Algebra"}], "&&",
+       RowBox[{"AlgebraQ", "[",
+        RowBox[{"Evaluate", "[", "s", "]"}], "]"}]}], ")"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{"AlgebraQ", "~", "SetAttributes", "~", "HoldFirst"}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"NotAlgebraQ", "[", "a_", "]"}], ":=",
+     RowBox[{"Not", "[",
+      RowBox[{"AlgebraQ", "[", "a", "]"}], "]"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{"NotAlgebraQ", "~", "SetAttributes", "~", "HoldFirst"}],
+    ";"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "define", " ", "formatting", " ", "if", " ", "you", " ", "want", " ",
+    "to"}], "*)"}],
+  RowBox[{
+   RowBox[{"Format", "[",
+    RowBox[{
+     RowBox[{
+      RowBox[{"Algebra", "[", "a_", "]"}], "?", "AlgebraQ"}], ",",
+     "StandardForm"}], "]"}], ":=",
+   RowBox[{"RawBoxes", "@",
+    RowBox[{"BoxForm`ArrangeSummaryBox", "[",
+     RowBox[{"Algebra", ",",
+      RowBox[{"Algebra", "[", "a", "]"}], ",", "None", ",",
+      RowBox[{"{", "\"\<Put summary info here\>\"", "}"}], ",",
+      RowBox[{"{", "}"}], ",", "StandardForm"}], "]"}]}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{"define", " ", "some", " ",
+    RowBox[{"accessors", "/", "methods"}], " ", "on", " ", "your", " ",
+    "alebgra"}], "*)"}],
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"Algebra", "[", "a_", "]"}], "?", "AlgebraQ"}], "[", "k_",
+      "]"}], ":=",
+     RowBox[{"Lookup", "[",
+      RowBox[{"a", ",", "k"}], "]"}]}], ";",
+    RowBox[{"(*",
+     RowBox[{"general", " ", "lookup"}], "*)"}],
+    RowBox[{
+     RowBox[{
+      RowBox[{"(",
+       RowBox[{"g", ":",
+        RowBox[{
+         RowBox[{"Algebra", "[", "a_", "]"}], "?", "AlgebraQ"}]}], ")"}],
+      "[", "\"\<Generators\>\"", "]"}], ":=",
+     RowBox[{"getAlgebraicGenerators", "[", "g", "]"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"(",
+       RowBox[{"g", ":",
+        RowBox[{
+         RowBox[{"Algebra", "[", "a_", "]"}], "?", "AlgebraQ"}]}], ")"}],
+      "[", "\"\<Dimensions\>\"", "]"}], ":=",
+     RowBox[{"getAlgebraDimension", "[", "g", "]"}]}], ";"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "define", " ", "some", " ", "overloads", " ", "for", " ", "your", " ",
+    "algebra"}], "*)"}],
+  RowBox[{
+   RowBox[{
+    RowBox[{"Algebra", "/:",
+     RowBox[{"Dimensions", "[",
+      RowBox[{"a_Algebra", "?", "AlgebraQ"}], "]"}], ":=",
+     RowBox[{"a", "[", "\"\<Dimensions\>\"", "]"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{"Algebra", "/:",
+     RowBox[{
+      RowBox[{"a_Algebra", "?", "AlgebraQ"}], "[",
+      RowBox[{"[", "el_", "]"}], "]"}], ":=",
+     RowBox[{"AlgebraicElement", "[",
+      RowBox[{"a", ",", "el"}], "]"}]}], ";",
+    RowBox[{"(*",
+     RowBox[{"getting", " ", "elements"}], "*)"}],
+    RowBox[{"AlgebraicElement", "/:",
+     RowBox[{"NonCommutativeMultiply", "[",
+      RowBox[{
+       RowBox[{"AlgebraicElement", "[",
+        RowBox[{
+         RowBox[{"a_Algebra", "?", "AlgebraQ"}], ",", "el1_"}], "]"}], ",",
+       RowBox[{"AlgebraicElement", "[",
+        RowBox[{
+         RowBox[{"a_Algebra", "?", "AlgebraQ"}], ",", "el2_"}], "]"}]}],
+      "]"}], ":=",
+     RowBox[{"getAlgebraProduct", "[",
+      RowBox[{"a", ",",
+       RowBox[{"{",
+        RowBox[{"el1", ",", "el2"}], "}"}]}], "]"}]}], ";"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "allow", " ", "for", " ", "natural", " ", "modifications", " ", "of", " ",
+    "the", " ", "algebraic", " ", "structure"}], "*)"}],
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"mutateAlgebra", "[",
+      RowBox[{
+       RowBox[{
+        RowBox[{"Algebra", "[", "a_", "]"}], "?", "AlgebraQ"}], ",",
+       "changes_Association"}], "]"}], ":=",
+     RowBox[{"Algebra", "[",
+      RowBox[{"Join", "[",
+       RowBox[{"changes", ",", "a"}], "]"}], "]"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{"mutateAlgebra", "[",
+     RowBox[{"a_Algebra", ",", "changes_"}], "]"}], ":=",
+    RowBox[{"mutateAlgebra", "[",
+     RowBox[{"a", ",",
+      RowBox[{"Association", "@", "changes"}]}], "]"}]}], "\n",
+   RowBox[{
+    RowBox[{
+    "algebraMutationHandler", "~", "SetAttributes", "~", "HoldAllComplete"}],
+    ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"algebraMutationHandler", "[",
+      RowBox[{"AssociateTo", "[",
+       RowBox[{
+        RowBox[{"s_Symbol", "?", "AlgebraQ"}], ",", "stuff_"}], "]"}], "]"}],
+     ":=",
+     RowBox[{"(",
+      RowBox[{"s", "=",
+       RowBox[{"mutateAlgebra", "[",
+        RowBox[{"s", ",", "stuff"}], "]"}]}], ")"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"algebraMutationHandler", "[",
+      RowBox[{"Set", "[",
+       RowBox[{
+        RowBox[{
+         RowBox[{"s_Symbol", "?", "AlgebraQ"}], "[", "key_", "]"}], ",",
+        "val_"}], "]"}], "]"}], ":=",
+     RowBox[{"(",
+      RowBox[{"s", "=",
+       RowBox[{"mutateAlgebra", "[",
+        RowBox[{"s", ",",
+         RowBox[{"key", "\[Rule]", "val"}]}], "]"}]}], ")"}]}], ";"}], "\n",
+   RowBox[{
+    RowBox[{"Language`SetMutationHandler", "[",
+     RowBox[{"Algebra", ",", "algebraMutationHandler"}], "]"}],
+    ";"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "implement", " ", "the", " ", "core", " ", "algebra", " ", "calculations",
+    " ", "some", " ", "other", " ", "way"}], "*)"}],
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"getAlgebraGenerators", "[",
+      RowBox[{"a_Algebra", "?", "AlgebraQ"}], "]"}], ":=",
+     "\"\<Generator, TBD\>\""}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"getAlgebraDimension", "[",
+      RowBox[{"a_Algebra", "?", "AlgebraQ"}], "]"}], ":=",
+     "\"\<Dimension, TBD\>\""}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"getAlgebraProduct", "[",
+      RowBox[{
+       RowBox[{"a_Algebra", "?", "AlgebraQ"}], ",",
+       RowBox[{"{",
+        RowBox[{"el1_", ",", "el2_"}], "}"}]}], "]"}], ":=",
+     "\"\<Product, TBD\>\""}], ";"}]}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"a", "=",
+  RowBox[{"Algebra", "[",
+   RowBox[{"\"\<MultTable\>\"", "\[Rule]",
+    RowBox[{"{", "}"}]}], "]"}]}], "\n",
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{"Out", ":",
+    RowBox[{"Algebra", "[",
+     RowBox[{"<|",
+      RowBox[{"\"\<MultTable\>\"", "\[Rule]",
+       RowBox[{"{", "}"}]}], "|>"}], "]"}]}], "*)"}]}]}], "Input"]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Mine", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}]], "Input",
+ InitializationCell->True],
+
+Cell[TextData[{
+ "Note : I will follow the paradigm suggested in ",
+ ButtonBox["this post",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://mathematica.stackexchange.com/a/213802"], None},
+  ButtonNote->"https://mathematica.stackexchange.com/a/213802"],
+ ". I propose to implement two wrappers: ",
+ Cell[BoxData[
+  FormBox[
+   StyleBox["DistributionMomentTruncation", "Code"], TraditionalForm]],
+  ExpressionUUID->"f6370fb0-e1a8-4b8e-ac1f-8137a578f462"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   StyleBox["ProcessMomentTruncation", "Code"], TraditionalForm]],
+  ExpressionUUID->"595c51cf-d79c-4fac-b150-61adc9f20594"],
+ ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Clearing definitions", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[",
+   StyleBox["DistributionMomentTruncation", "Code"],
+   StyleBox["]", "Code"]}],
+  StyleBox[";", "Code"]}], "\n",
+ RowBox[{
+  RowBox[{
+   StyleBox["ClearAll", "Code"],
+   StyleBox["[", "Code"],
+   RowBox[{
+   "$DistributionDomainCanonicalizer", ",", "$DistributionDomainStylizer",
+    ",", "$DistributionMomentTruncationSummaryThumbnail"}], "]"}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{"ClearAll", "[",
+  RowBox[{
+  "canonicalizeDistributionMomentTruncation", ",",
+   "validateDistributionMomentTruncation", ",",
+   "instantiateDistributionMomentTruncation"}], "]"}], "\[IndentingNewLine]",
+ RowBox[{"ClearAll", "[",
+  RowBox[{
+  "DistributionMomentTruncationQ", ",", "NotDistributionMomentTruncationQ"}],
+  "]"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"ClearAll", "[",
+   RowBox[{
+    StyleBox["ProcessMomentTruncation", "Code"],
+    StyleBox[",", "Code"], "QueueMomentTruncation"}], "]"}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "DistributionMomentTruncation", "]"}], "=",
+   RowBox[{"{",
+    RowBox[{"(*",
+     RowBox[{
+      RowBox[{
+      "This", " ", "allow", " ", "for", " ", "setting", " ", "default", " ",
+       "values"}], ";"}], " ", "*)"}], "\[IndentingNewLine]",
+    RowBox[{
+     RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]", "None"}], ",",
+     RowBox[{"(*",
+      RowBox[{"major", " ", "parameter"}], "*)"}], "\[IndentingNewLine]",
+     RowBox[{"\"\<OriginalDistribution\>\"", "\[Rule]", "None"}], ",",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"if", " ", "supplied"}], ",", " ",
+       RowBox[{
+        RowBox[{
+        "the", " ", "moment", " ", "sequence", " ", "is", " ", "always", " ",
+         "generated", " ", "using", " ", "the", " ", "moment", " ",
+         "function", " ", "of", " ", "the", " ", "original", " ",
+         "distribution"}], ";", " ",
+        RowBox[{
+        "there", " ", "may", " ", "be", " ", "need", " ", "for", " ",
+         "memoisation"}]}]}], "*)"}], "\[IndentingNewLine]",
+     "\[IndentingNewLine]",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"\"\<IndependentMargins\>\"", "\[Rule]", "None"}], ",",
+       RowBox[{"(*",
+        RowBox[{
+         StyleBox[
+          RowBox[{"If", " ", "this", " ", "is", " ", "true"}],
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[",",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         RowBox[{
+          StyleBox[
+           RowBox[{
+           "MomentData", " ", "is", " ", "represented", " ", "by", " ", "a",
+            " ", "matrix", " ", "only"}],
+           FontColor->RGBColor[1, 0, 0]], ";", " ",
+          RowBox[{
+           RowBox[{"only", " ", "meaningful", " ", "for", " ", "multi"}], "-",
+           RowBox[{"dimensional", " ", "distributions"}]}]}], ",", " ",
+         StyleBox[
+          RowBox[{
+           RowBox[{
+           "should", " ", "be", " ", "set", " ", "to", " ", "None", " ",
+            "for", " ", "1"}], "-",
+           RowBox[{"d", " ", "distributions"}]}],
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[",",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         RowBox[{
+          StyleBox["and",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["is",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["deleted",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["if",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["IdenticalMargins",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["is",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          RowBox[{
+           StyleBox["True",
+            FontColor->RGBColor[1, 0, 0]], "."}]}]}], "*)"}],
+       "\[IndentingNewLine]",
+       RowBox[{"\"\<IdenticalMargins\>\"", "\[Rule]", "None"}], ","}],
+      RowBox[{"(*",
+       RowBox[{
+        RowBox[{"If", " ", "this", " ", "is", " ", "true"}], ",", " ",
+        RowBox[{
+         RowBox[{
+         "MomentData", " ", "can", " ", "be", " ", "represented", " ", "as",
+          " ", "a", " ", "vector"}], ";", " ",
+         RowBox[{
+          RowBox[{"only", " ", "meaningful", " ", "for", " ", "multi"}], "-",
+          RowBox[{"dimensional", " ", "distributions", " ",
+           StyleBox[
+            RowBox[{
+            "should", " ", "be", " ", "set", " ", "to", " ", "None", " ",
+             "for", " ", "1"}],
+            FontColor->RGBColor[1, 0, 0]]}],
+          StyleBox["-",
+           FontColor->RGBColor[1, 0, 0]],
+          RowBox[{
+           StyleBox[
+            RowBox[{"d", " ", "distributions"}],
+            FontColor->RGBColor[1, 0, 0]], "."}]}]}]}], "*)"}], "*)"}],
+     "\[IndentingNewLine]",
+     RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "None"}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"\"\<MomentForm\>\"", "\[Rule]", "\"\<Moment\>\""}], ",",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{
+       "following", " ", "the", " ", "specification", " ", "of", " ", Cell[
+        TextData[ButtonBox["MomentConvert",
+         BaseStyle->"Hyperlink",
+         ButtonData->{
+           URL[
+           "http://reference.wolfram.com/language/ref/MomentConvert.html"],
+           None},
+         ButtonNote->
+          "http://reference.wolfram.com/language/ref/MomentConvert.html"]],
+         ExpressionUUID->"0d355b60-2f26-4882-8f4a-e655a5a82dba"]}], ",", " ",
+       "absolute", ",", " ", "factorial", ",", " ",
+       RowBox[{
+        RowBox[{"central", " ", "moments", " ", "and", " ", "cumulants"}],
+        ";", " ",
+        RowBox[{
+        "may", " ", "also", " ", "support", " ", "truncated", " ",
+         "probability", " ", "sequence", " ", "for"}]}]}], " ", "*)"}],
+     "\[IndentingNewLine]",
+     RowBox[{"\"\<MomentData\>\"", "\[Rule]", "None"}], ",",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"an", " ", "association", " ",
+        RowBox[{"(",
+         RowBox[{"is", " ", "this", " ", "really", " ", "a", " ", "good", " ",
+          RowBox[{"idea", "?"}]}], ")"}], " ", "of", " ", "the", " ",
+        "moments"}], ",", " ",
+       RowBox[{
+        RowBox[{"with", " ",
+         RowBox[{"(",
+          RowBox[{"lists", " ", "of"}], ")"}], " ", "non", " ", "negative",
+         " ", "integers", " ", "as", " ", "keys"}], ";", " ",
+        RowBox[{
+         RowBox[{"an", " ", "all"}], "-",
+         RowBox[{
+         "zero", " ", "key", " ", "can", " ", "be", " ", "used", " ", "to",
+          " ", "denote", " ", "an", " ", "alternative", " ", "unitisation",
+          " ",
+          RowBox[{
+           RowBox[{"(",
+            RowBox[{
+            "a", " ", "single", " ", "zero", " ", "can", " ", "be", " ",
+             "used", " ", "as", " ", "a", " ", "shorthand"}], ")"}], ".", " ",
+           StyleBox["not",
+            FontColor->RGBColor[1, 0, 0]]}],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["instantiated",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["if",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["there",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["is",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["an",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox["original",
+           FontColor->RGBColor[1, 0, 0]],
+          StyleBox[" ",
+           FontColor->RGBColor[1, 0, 0]],
+          RowBox[{
+           StyleBox["distribution",
+            FontColor->RGBColor[1, 0, 0]], "."}]}]}]}]}], "*)"}],
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{
+       "I", " ", "decide", " ", "that", " ", "we", " ", "should", " ", "only",
+         " ", "support", " ", "two", " ", "types", " ", "of", " ", "moment",
+        " ", "data"}], ";", " ",
+       RowBox[{"see", " ", "\"\<MomentDataShape\>\"", " ", "below"}]}],
+      "*)"}], "\[IndentingNewLine]",
+     RowBox[{"\"\<MomentDataShape\>\"", "\[Rule]", "None"}], ",",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"allowed", " ", "types", " ", "are", " ", "\"\<Full\>\""}],
+       ",", " ",
+       RowBox[{
+        RowBox[{"\"\<Overall\>\"", " ", "and", " ", "\"\<Function\>\""}], ";",
+         " ",
+        RowBox[{"\"\<Full\>\"", " ", "should", " ", "be", " ",
+         RowBox[{"assumed", ".", " ", "If"}], " ", "IndependentMargins", " ",
+         "is", " ", "True"}]}], ",", " ",
+       RowBox[{
+        RowBox[{"this", " ", "specification", " ", "is", " ", "ignored"}],
+        ";", " ",
+        RowBox[{
+         RowBox[{"only", " ", "meaningful", " ", "for", " ", "multi"}], "-",
+         RowBox[{"dimensional", " ", "distributions"}]}]}], ",", " ",
+       RowBox[{
+        StyleBox[
+         RowBox[{
+         "should", " ", "be", " ", "set", " ", "to", " ", "None", " ", "for",
+          " ", "1"}],
+         FontColor->RGBColor[1, 0, 0]],
+        StyleBox["-",
+         FontColor->RGBColor[1, 0, 0]],
+        RowBox[{
+         StyleBox["d",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         RowBox[{
+          StyleBox["distributions",
+           FontColor->RGBColor[1, 0, 0]], ".", " ",
+          StyleBox["not",
+           FontColor->RGBColor[1, 0, 0]]}],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox["instantiated",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox["if",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox["there",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox["is",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox["an",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox["original",
+          FontColor->RGBColor[1, 0, 0]],
+         StyleBox[" ",
+          FontColor->RGBColor[1, 0, 0]],
+         RowBox[{
+          StyleBox["distribution",
+           FontColor->RGBColor[1, 0, 0]], "."}]}]}]}], "*)"}],
+     "\[IndentingNewLine]",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"\"\<Dimensions\>\"", "\[Rule]", "None"}], ","}],
+      RowBox[{"(*",
+       StyleBox[
+        RowBox[{"is", " ", "this", " ", "really", " ",
+         RowBox[{"needed", "?"}]}],
+        FontSlant->"Italic"], "*)"}], "*)"}], "\[IndentingNewLine]",
+     RowBox[{"\"\<Domain\>\"", "\[Rule]", "None"}]}],
+    RowBox[{"(*",
+     RowBox[{
+      RowBox[{"\"\<DistributionDomain\>\"", "\[Rule]", "None"}], ","}],
+     "*)"}],
+    RowBox[{"(*",
+     RowBox[{
+      RowBox[{
+       RowBox[{"These", " ", "two", " ", "should", " ",
+        StyleBox["always",
+         FontSlant->"Italic"],
+        StyleBox[" ",
+         FontSlant->"Italic"],
+        StyleBox["be",
+         FontSlant->"Italic"],
+        StyleBox[" ",
+         FontSlant->"Italic"],
+        StyleBox["synonymous",
+         FontSlant->"Italic"]}], ";", " ",
+       RowBox[{
+       "the", " ", "latter", " ", "should", " ", "not", " ", "be", " ",
+        "stored"}]}], ",", " ",
+      RowBox[{"but", " ", "only", " ", "handled", " ", "in", " ",
+       RowBox[{"interfaces", ".", " ",
+        StyleBox["We",
+         FontColor->RGBColor[1, 0, 0]]}],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["must",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["handle",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["conversions",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["between",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["\"\<domains\>\"",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["and",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["\"\<intervals/spans\>\"",
+        FontColor->RGBColor[1, 0, 0]]}]}], "*)"}], "\[IndentingNewLine]",
+    RowBox[{"(*",
+     RowBox[{",",
+      RowBox[{"\"\<SummaryThumbnail\>\"", "\[Rule]", "None"}]}], "*)"}],
+    RowBox[{"(*",
+     RowBox[{
+      RowBox[{
+       RowBox[{
+       "Default", " ", "to", " ", "a", " ", "plot", " ", "of", " ", "the",
+        " ", "moment", " ", "matched", " ", "polynomial"}], ";", " ",
+       RowBox[{
+       "if", " ", "there", " ", "is", " ", "an", " ", "original", " ",
+        "distribution"}]}], ",", " ",
+      RowBox[{
+      "it", " ", "will", " ", "also", " ", "be", " ", "plotted", " ", "so",
+       " ", "that", " ", "their", " ", "difference", " ", "is", " ",
+       "clearly", " ",
+       RowBox[{"seen", ".", " ", "When"}], " ", "any", " ", "of", " ",
+       "these", " ", "are", " ", "hard", " ", "to", " ", "evaluate"}], ",",
+      " ",
+      RowBox[{
+       RowBox[{
+       "a", " ", "default", " ", "thumbnail", " ", "will", " ", "be", " ",
+        "shown"}], ";", " ",
+       StyleBox[
+        RowBox[{
+        "this", " ", "may", " ", "should", " ", "not", " ", "be", " ", "part",
+          " ", "of", " ", "the", " ", "structure"}],
+        FontColor->RGBColor[1, 0, 0]]}],
+      StyleBox[",",
+       FontColor->RGBColor[1, 0, 0]],
+      StyleBox[" ",
+       FontColor->RGBColor[1, 0, 0]],
+      RowBox[{
+       StyleBox["since",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["it",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["is",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["expensive",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox["to",
+        FontColor->RGBColor[1, 0, 0]],
+       StyleBox[" ",
+        FontColor->RGBColor[1, 0, 0]],
+       RowBox[{
+        StyleBox["store",
+         FontColor->RGBColor[1, 0, 0]], "."}]}]}], "*)"}],
+    "\[IndentingNewLine]", "}"}]}], ";"}]}], "Input",
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Initializers", "Subsubsection"],
+
+Cell[CellGroupData[{
+
+Cell["From a distribution", "ItemNumbered"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{"dist_", "?", "DistributionParameterQ"}], "]"}], ":=",
+  "dist"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DistributionMomentTruncation", "[",
+     RowBox[{
+      RowBox[{"dist_", "?", "DistributionParameterQ"}], ",",
+      RowBox[{"type", ":",
+       RowBox[{
+       "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+        "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}]}]}], "]"}], "[",
+    "r_", "]"}], ":=",
+   RowBox[{
+    RowBox[{"Symbol", "[", "type", "]"}], "[",
+    RowBox[{"dist", ",", "r"}], "]"}]}],
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"DistributionMomentTruncation", "[",
+    RowBox[{
+     RowBox[{
+      RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol", "|",
+      RowBox[{"trunc", ":", "Infinity"}]}], ",",
+     RowBox[{"type", ":",
+      RowBox[{
+      "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+       "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ":",
+      "\"\<Moment\>\""}], ",",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], "[",
+   RowBox[{"dist_", "?", "DistributionParameterQ"}], "]"}], ":=",
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{"trunc", ",", "dist", ",", "type", ",", "ops"}],
+   "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol"}], ",",
+    RowBox[{"dist_", "?", "DistributionParameterQ"}], ",",
+    RowBox[{"type", ":",
+     RowBox[{
+     "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+      "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ":",
+     "\"\<Moment\>\""}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=",
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{"trunc", ",", "dist", ",",
+    RowBox[{"\"\<MomentForm\>\"", "\[Rule]", "type"}], ",",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"", "|",
+         "\"\<MomentForm\>\"", "|", "\"\<MomentData\>\"", "|",
+         "\"\<MomentDataShape\>\""}], "]"}]}], "]"}]}]}],
+   "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol"}], ",",
+    RowBox[{"dist_", "?", "DistributionParameterQ"}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=",
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]", "trunc"}], ",",
+    RowBox[{"\"\<OriginalDistribution\>\"", "\[Rule]", "dist"}], ",",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"", "|",
+         "\"\<MomentData\>\"", "|", "\"\<MomentDataShape\>\""}], "]"}]}],
+      "]"}]}]}], "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{"Infinity", ",",
+    RowBox[{"dist_", "?", "DistributionParameterQ"}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "dist",
+  RowBox[{"(*",
+   RowBox[{
+    RowBox[{
+    "when", " ", "a", " ", "distribution", " ", "is", " ", "not", " ",
+     "moment", " ", "truncated"}], ",", " ",
+    RowBox[{
+    "it", " ", "gets", " ", "cast", " ", "into", " ", "the", " ", "original",
+     " ", "distribution"}]}], "*)"}]}]}], "Input",
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["From a moment function", "ItemNumbered"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol", "|",
+     RowBox[{"trunc", ":", "Infinity"}]}], ",",
+    RowBox[{"moments_Function", "|", "moments_Symbol"}], ",",
+    RowBox[{"type", ":",
+     RowBox[{
+     "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+      "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ":",
+     "\"\<Moment\>\""}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=",
+  RowBox[{"DistributionMomentTruncation", "[", "\[IndentingNewLine]",
+   RowBox[{"trunc", ",", "moments", ",",
+    RowBox[{"\"\<MomentForm\>\"", "\[Rule]", "type"}], ",",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"", "|",
+         "\"\<MomentForm\>\"", "|", "\"\<MomentData\>\"", "|",
+         "\"\<MomentDataShape\>\""}], "]"}]}], "]"}]}]}],
+   "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol", "|",
+     RowBox[{"trunc", ":", "Infinity"}]}], ",",
+    RowBox[{"moments_Function", "|", "moments_Symbol"}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=",
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]", "trunc"}], ",",
+    RowBox[{"\"\<MomentData\>\"", "\[Rule]", "moments"}], ",",
+    RowBox[{"\"\<MomentDataShape\>\"", "\[Rule]", "\"\<Function\>\""}], ",",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"", "|",
+         "\"\<MomentData\>\"", "|", "\"\<MomentDataShape\>\""}], "]"}]}],
+      "]"}]}]}], "]"}]}]}], "Input",
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["From a moment array", "ItemNumbered"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"DistributionMomentTruncation", "[",
+    RowBox[{
+     RowBox[{"moments_", "?", "VectorQ"}], ",",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[",
+       RowBox[{"{",
+        RowBox[{
+         RowBox[{"\"\<Domain\>\"", "\[Rule]",
+          RowBox[{"Interval", "[",
+           RowBox[{"{",
+            RowBox[{
+             RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}],
+           "]"}]}], ",", "DistributionMomentTruncation"}], "}"}], "]"}]}]}],
+    "]"}], ":=",
+   RowBox[{"DistributionMomentTruncation", "[",
+    RowBox[{
+     RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]",
+      RowBox[{"Length", "[", "moments", "]"}]}], ",",
+     RowBox[{"\"\<MomentData\>\"", "\[Rule]", "moments"}], ",",
+     RowBox[{"\"\<Domain\>\"", "\[Rule]",
+      RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}]}], ",",
+     RowBox[{"If", "[",
+      RowBox[{
+       RowBox[{"!",
+        RowBox[{"MatchQ", "[",
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}], ",",
+          RowBox[{"_Interval", "|", "_Span"}]}], "]"}]}],
+       RowBox[{"(*",
+        RowBox[{"one", " ", "dimensional"}], "*)"}], ",",
+       RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "\"\<Identical\>\""}],
+       ",",
+       RowBox[{"Unevaluated", "@",
+        RowBox[{"Sequence", "[", "]"}]}]}], "]"}], ",",
+     RowBox[{"Sequence", "@@",
+      RowBox[{"FilterRules", "[",
+       RowBox[{
+        RowBox[{"{", "ops", "}"}], ",",
+        RowBox[{"Except", "[",
+         RowBox[{
+         "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"", "|",
+          "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+          "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}], "]"}]}],
+  RowBox[{"(*",
+   RowBox[{
+    RowBox[{"default", " ", "to", " ", "a", " ", "1"}], "-",
+    RowBox[{"d", " ", "distribution"}]}], "*)"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{"moments_", "?", "MatrixQ"}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[",
+      RowBox[{"{",
+       RowBox[{
+        RowBox[{"\"\<Domain\>\"", "\[Rule]", "None"}], ",",
+        "DistributionMomentTruncation"}], "}"}], "]"}]}]}], "]"}], ":=",
+  RowBox[{"(*",
+   RowBox[{
+   "This", " ", "is", " ", "for", " ", "independent", " ", "margins"}],
+   "*)"}],
+  RowBox[{"Module", "[",
+   RowBox[{
+    RowBox[{"{",
+     RowBox[{"domain", "=",
+      RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}]}], "}"}], ",",
+    "\[IndentingNewLine]",
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"SquareMatrixQ", "[", "moments", "]"}], "&&",
+       RowBox[{"Not", "@",
+        RowBox[{"MatchQ", "[",
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<MarginalProperty\>\"", "]"}], ",",
+          RowBox[{"\"\<Identical\>\"", "|", "\"\<Independent\>\""}]}],
+         "]"}]}], "&&", "\[IndentingNewLine]",
+       RowBox[{"(",
+        RowBox[{
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<MomentDataShape\>\"", "]"}],
+          "===", "\"\<Full\>\""}], "||", "\[IndentingNewLine]",
+         RowBox[{"(",
+          RowBox[{
+           RowBox[{"MatchQ", "[",
+            RowBox[{"domain", ",",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"_Interval", "|", "_Span"}], ",",
+               RowBox[{"_Interval", "|", "_Span"}]}], "}"}]}], "]"}], "&&",
+           RowBox[{
+            RowBox[{"Length", "[", "moments", "]"}], ">", "2"}]}], ")"}]}],
+        ")"}]}], ",",
+      RowBox[{"(*",
+       RowBox[{
+        RowBox[{
+        "handle", " ", "the", " ", "case", " ", "when", " ", "the", " ",
+         "distribution", " ", "happens", " ", "to", " ", "be", " ", "2"}],
+        "-", "d"}], "*)"}], "\[IndentingNewLine]",
+      RowBox[{
+       RowBox[{"If", "[",
+        RowBox[{
+         RowBox[{"domain", "===", "None"}], ",",
+         RowBox[{"domain", "=",
+          RowBox[{"Table", "[",
+           RowBox[{
+            RowBox[{"Interval", "[",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}],
+             "]"}], ",", "2"}], "]"}]}]}], "]"}], ";", "\[IndentingNewLine]",
+       RowBox[{"DistributionMomentTruncation", "[", "\[IndentingNewLine]",
+        RowBox[{
+         RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]",
+          RowBox[{
+           RowBox[{"Length", "[", "moments", "]"}], "-", "1"}]}],
+         RowBox[{"(*",
+          StyleBox[
+           RowBox[{"note", " ", "this"}],
+           FontColor->RGBColor[1, 0, 0]], "*)"}], ",",
+         RowBox[{"\"\<MomentData\>\"", "\[Rule]", "moments"}], ",",
+         RowBox[{"\"\<Domain\>\"", "\[Rule]", "domain"}], ",",
+         RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "None"}], ",",
+         RowBox[{"Sequence", "@@",
+          RowBox[{"FilterRules", "[",
+           RowBox[{
+            RowBox[{"{", "ops", "}"}], ",",
+            RowBox[{"Except", "[",
+             RowBox[{
+             "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"",
+              "|", "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+              "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}],
+        "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]",
+      RowBox[{
+       RowBox[{"If", "[",
+        RowBox[{
+         RowBox[{"domain", "===", "None"}], ",",
+         RowBox[{"domain", "=",
+          RowBox[{"Table", "[",
+           RowBox[{
+            RowBox[{"Interval", "[",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}],
+             "]"}], ",",
+            RowBox[{"Length", "[", "moments", "]"}]}], "]"}]}]}], "]"}], ";",
+       "\[IndentingNewLine]",
+       RowBox[{"DistributionMomentTruncation", "[", "\[IndentingNewLine]",
+        RowBox[{
+         RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]",
+          RowBox[{"Length", "[", "moments", "]"}]}], ",",
+         RowBox[{"\"\<MomentData\>\"", "\[Rule]", "moments"}], ",",
+         RowBox[{"\"\<Domain\>\"", "\[Rule]", "domain"}], ",",
+         RowBox[{
+         "\"\<MarginalProperty\>\"", "\[Rule]", "\"\<Independent\>\""}], ",",
+         RowBox[{"Sequence", "@@",
+          RowBox[{"FilterRules", "[",
+           RowBox[{
+            RowBox[{"{", "ops", "}"}], ",",
+            RowBox[{"Except", "[",
+             RowBox[{
+             "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"",
+              "|", "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+              "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}],
+        "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}]}],
+   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{
+    RowBox[{"moments_", "?", "ArrayQ"}], ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[",
+      RowBox[{"{",
+       RowBox[{
+        RowBox[{"\"\<Domain\>\"", "\[Rule]", "None"}], ",",
+        "DistributionMomentTruncation"}], "}"}], "]"}]}]}], "]"}], ":=",
+  RowBox[{"(*",
+   StyleBox[
+    RowBox[{"currently", ",", " ",
+     RowBox[{
+      RowBox[{"only", " ", "\"\<MomentDataShape\>\""}], "\[Rule]",
+      RowBox[{"\"\<Full\>\"", " ", "is", " ", "supported"}]}]}],
+    FontColor->RGBColor[1, 0, 0]], "*)"}], "\[IndentingNewLine]",
+  RowBox[{"Module", "[",
+   RowBox[{
+    RowBox[{"{",
+     RowBox[{"domain", "=",
+      RowBox[{"If", "[",
+       RowBox[{
+        RowBox[{
+         RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}], "===", "None"}],
+         ",",
+        RowBox[{"Table", "[",
+         RowBox[{
+          RowBox[{"Interval", "[",
+           RowBox[{"{",
+            RowBox[{
+             RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}], "]"}],
+           ",",
+          RowBox[{"ArrayDepth", "[", "moments", "]"}]}], "]"}]}], "]"}]}],
+     "}"}], ",", "\[IndentingNewLine]",
+    RowBox[{"DistributionMomentTruncation", "[", "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{"\"\<TruncationOrder\>\"", "\[Rule]",
+       RowBox[{
+        RowBox[{"Length", "[", "moments", "]"}], "-", "1"}]}],
+      RowBox[{"(*",
+       StyleBox[
+        RowBox[{"note", " ", "this"}],
+        FontColor->RGBColor[1, 0, 0]], "*)"}], ",",
+      RowBox[{"\"\<MomentData\>\"", "\[Rule]", "moments"}], ",",
+      RowBox[{"\"\<MomentDataShape\>\"", "\[Rule]", "\"\<Full\>\""}], ",",
+      RowBox[{"\"\<Domain\>\"", "\[Rule]", "domain"}], ",",
+      RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "None"}], ",",
+      RowBox[{"Sequence", "@@",
+       RowBox[{"FilterRules", "[",
+        RowBox[{
+         RowBox[{"{", "ops", "}"}], ",",
+         RowBox[{"Except", "[",
+          RowBox[{
+          "\"\<TruncationOrder\>\"", "|", "\"\<OriginalDistribution\>\"",
+           "|", "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+           "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}],
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]",
+   "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{"ops", ":",
+    RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=",
+  RowBox[{"DistributionMomentTruncation", "[",
+   RowBox[{"canonicalizeDistributionMomentTruncation", "[", "ops", "]"}],
+   "]"}]}]}], "Input",
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Canonicalize the Truncation", "Item"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "do", " ", "the", " ", "minimum", " ", "work", " ", "necessary", " ", "to",
+     " ", "make", " ", "sure", " ", "all", " ", "the", " ", "data", " ",
+    "for", " ", "the", " ", "DistributionMomentTruncation", " ", "is", " ",
+    "there"}], "*)"}], "\[IndentingNewLine]",
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "::", "nocanon"}], "=",
+     "\"\<Cannot construct a valid DistributionMomentTruncation from the \
+given options `1`.\>\""}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "::", "noentry"}], "=",
+     "\"\<Cannot construct a valid DistributionMomentTruncation because the \
+entry `1` is not provided and cannot be inferred.\>\""}], ";"}],
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "::", "noimplm"}], "=",
+     "\"\<The required feature `1` is not implemented yet.\>\""}], ";"}],
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"$DistributionDomainCanonicalizer", "=",
+     RowBox[{"Dispatch", "@",
+      RowBox[{"{", "\[IndentingNewLine]",
+       RowBox[{
+        RowBox[{"Reals", "\[Rule]",
+         RowBox[{"Interval", "[",
+          RowBox[{"{",
+           RowBox[{
+            RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}],
+          "]"}]}], ",",
+        RowBox[{"Integers", "\[Rule]",
+         RowBox[{"(",
+          RowBox[{
+           RowBox[{"-", "\[Infinity]"}], ";;", "\[Infinity]"}], ")"}]}], ",",
+        "\[IndentingNewLine]",
+        RowBox[{"NonNegativeReals", "\[Rule]",
+         RowBox[{"Interval", "[",
+          RowBox[{"{",
+           RowBox[{"0", ",", "\[Infinity]"}], "}"}], "]"}]}], ",",
+        RowBox[{"NonPositiveReals", "\[Rule]",
+         RowBox[{"Interval", "[",
+          RowBox[{"{",
+           RowBox[{
+            RowBox[{"-", "\[Infinity]"}], ",", "0"}], "}"}], "]"}]}], ",",
+        "\[IndentingNewLine]",
+        RowBox[{"NonNegativeIntegers", "\[Rule]",
+         RowBox[{"(",
+          RowBox[{"0", ";;", "\[Infinity]"}], ")"}]}], ",",
+        RowBox[{"NonPositiveIntegers", "\[Rule]",
+         RowBox[{"(",
+          RowBox[{
+           RowBox[{"-", "\[Infinity]"}], ";;", "0"}], ")"}]}], ",",
+        "\[IndentingNewLine]",
+        RowBox[{"PositiveIntegers", "\[Rule]",
+         RowBox[{"(",
+          RowBox[{"1", ";;", "\[Infinity]"}], ")"}]}], ",",
+        RowBox[{"NegativeIntegers", "\[Rule]",
+         RowBox[{"(",
+          RowBox[{
+           RowBox[{"-", "\[Infinity]"}], ";;",
+           RowBox[{"-", "1"}]}], ")"}]}]}], "}"}]}]}], ";"}],
+   "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"canonicalizeDistributionMomentTruncation", "[",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[", "DistributionMomentTruncation", "]"}]}],
+     "]"}], ":=",
+    RowBox[{"Which", "[", "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Length", "@",
+        RowBox[{"{", "ops", "}"}]}], "<", "1"}], ",",
+      RowBox[{
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"DistributionMomentTruncation", "::", "nocanon"}], ",",
+         RowBox[{"{", "ops", "}"}]}], "]"}], ";", "$Failed"}], ",",
+      "\[IndentingNewLine]",
+      RowBox[{
+       RowBox[{
+        RowBox[{"OptionValue", "[", "\"\<MomentDataShape\>\"", "]"}], "===",
+        "\"\<Function\>\""}], "&&",
+       RowBox[{"(",
+        RowBox[{
+         RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}], "===", "None"}],
+         ")"}]}], ",",
+      RowBox[{
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"DistributionMomentTruncation", "::", "noentry"}], ",",
+         RowBox[{"{", "\"\<Domain\>\"", "}"}]}], "]"}], ";", "$Failed"}], ",",
+       "\[IndentingNewLine]", "True", ",",
+      RowBox[{"Module", "[",
+       RowBox[{
+        RowBox[{"{",
+         RowBox[{"truncdata", "=",
+          RowBox[{"{", "ops", "}"}]}], "}"}], ",", "\[IndentingNewLine]",
+        RowBox[{
+         RowBox[{"If", " ", "[",
+          RowBox[{
+           RowBox[{
+            RowBox[{"OptionValue", "[", "\"\<MomentDataShape\>\"", "]"}],
+            "===", "\"\<Overall\>\""}], ",", "\[IndentingNewLine]",
+           RowBox[{
+            RowBox[{"Message", "[",
+             RowBox[{
+              RowBox[{"DistributionMomentTruncation", "::", "noimplm"}], ",",
+              RowBox[{
+              "\"\<MomentDataShape\>\"", "\[Rule]", "\"\<Overall\>\""}]}],
+             "]"}], ";",
+            RowBox[{"AppendTo", "[",
+             RowBox[{"truncdata", ",",
+              RowBox[{
+              "\"\<MomentDataShape\>\"", "\[Rule]", "\"\<Full\>\""}]}],
+             "]"}]}]}], "]"}], ";", "\[IndentingNewLine]",
+         RowBox[{"AppendTo", "[",
+          RowBox[{"truncdata", ",",
+           RowBox[{
+            RowBox[{"\"\<Domain\>\"", "\[Rule]",
+             RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}]}], "/.",
+            "$DistributionDomainCanonicalizer"}]}], "]"}], ";",
+         "\[IndentingNewLine]",
+         RowBox[{"If", " ", "[",
+          RowBox[{
+           RowBox[{"DistributionParameterQ", "[",
+            RowBox[{"OptionValue", "[", "\"\<OriginalDistribution\>\"", "]"}],
+             "]"}], ",",
+           RowBox[{"AppendTo", "[",
+            RowBox[{"truncdata", ",",
+             RowBox[{"\"\<Domain\>\"", "\[Rule]",
+              RowBox[{"DistributionDomain", "[",
+               RowBox[{
+               "OptionValue", "[", "\"\<OriginalDistribution\>\"", "]"}],
+               "]"}]}]}], "]"}]}], "]"}], ";", "\[IndentingNewLine]",
+         RowBox[{"AppendTo", "[",
+          RowBox[{"truncdata", ",",
+           RowBox[{"\"\<MomentForm\>\"", "\[Rule]",
+            RowBox[{"OptionValue", "[", "\"\<MomentForm\>\"", "]"}]}]}],
+          "]"}], ";", "\[IndentingNewLine]",
+         RowBox[{"Sort", "@",
+          RowBox[{"Association", "[", "truncdata", "]"}]}]}]}],
+       "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]",
+     "]"}]}]}]}]], "Input",
+ InitializationCell->True]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Validators", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "make", " ", "some", " ", "validators", " ", "so", " ", "you", " ", "can",
+    " ", "always", " ", "be", " ", "sure", " ", "you", " ", "have", " ", "a",
+    " ", "valid", " ", "DistributionMomentTruncation", " ", "without", " ",
+    "constantly", " ", "having", " ", "to", " ", "check", " ", "it"}], "*)"}],
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "validateDistributionMomentTruncation", "[", "assoc_Association", "]"}], ":=",
+    RowBox[{"And", "[", "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Length", "[", "assoc", "]"}], ">", "0"}], ",",
+      RowBox[{"KeyMemberQ", "[", "\"\<TruncationOrder\>\"", "]"}]}],
+     "\[IndentingNewLine]", "]"}]}],
+   RowBox[{"(*",
+    RowBox[{"reimplement", " ", "this"}], "*)"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"DistributionMomentTruncation", "[", "assoc_Association", "]"}],
+       "?", "NotDistributionMomentTruncationQ"}], ":=",
+     RowBox[{
+      RowBox[{"System`Private`HoldSetValid", "[",
+       RowBox[{"DistributionMomentTruncation", "[", "assoc", "]"}], "]"}], "/;",
+      RowBox[{"validateDistributionMomentTruncation", "[", "assoc", "]"}]}]}],
+     ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+     "DistributionMomentTruncationQ", "[",
+      "distrlx_DistributionMomentTruncation", "]"}], ":=",
+     RowBox[{"System`Private`HoldValidQ", "[", "distrlx", "]"}]}], ";"}],
+   "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncationQ", "[", "_", "]"}], ":=",
+     "False"}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncationQ", "[", "symbol_Symbol", "]"}], ":=",
+     RowBox[{"(",
+      RowBox[{
+       RowBox[{
+        RowBox[{"Head", "[", "symbol", "]"}], "===",
+        "DistributionMomentTruncation"}], "&&",
+       RowBox[{"DistributionMomentTruncationQ", "[",
+        RowBox[{"Evaluate", "[", "symbol", "]"}], "]"}]}], ")"}]}], ";"}],
+   "\n",
+   RowBox[{
+    RowBox[{
+    "DistributionMomentTruncationQ", "~", "SetAttributes", "~", "HoldFirst"}],
+     ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"NotDistributionMomentTruncationQ", "[", "distrlx_", "]"}], ":=",
+     RowBox[{"Not", "[",
+      RowBox[{"DistributionMomentTruncationQ", "[", "distrlx", "]"}], "]"}]}],
+     ";"}], "\n",
+   RowBox[{
+    RowBox[{
+    "NotDistributionMomentTruncationQ", "~", "SetAttributes", "~",
+     "HoldFirst"}], ";"}]}]}]], "Input",
+ InitializationCell->True],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"instantiateDistributionMomentTruncation", "[",
+   RowBox[{"distrlx_DistributionMomentTruncation", ",",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=",
+  RowBox[{"Missing", "[", "\"\<NotAvailable\>\"", "]"}],
+  RowBox[{"(*",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+     "Default", " ", "to", " ", "na\[IDoubleDot]ve", " ", "polynomial", " ",
+      "moment", " ", "matching"}], ";", " ",
+     RowBox[{
+     "possible", " ", "alternatives", " ", "including", " ", "orthogonal",
+      " ", "polynomials"}]}], ",", " ",
+    RowBox[{"piecewise", "-",
+     RowBox[{"constant", " ",
+      RowBox[{"(", "histogram", ")"}]}]}], ",", " ",
+    RowBox[{"point", "-", "masses"}], ",", " ",
+    RowBox[{"smooth", "-",
+     RowBox[{"kernel", " ",
+      RowBox[{"distributions", "."}]}]}]}], "*)"}]}]], "Input",
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Accessors", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"DistributionMomentTruncation", "::", "excdtrnc"}], "=",
+   "\"\<The \!\(\*SuperscriptBox[\(`1`\), \(th\)]\) moment exceeds the order \
+of the truncation.\>\""}], ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}], "[",
+    "\"\<Moment\>\"", "]"}], "[", "0", "]"}], ":=",
+  "1"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+     "[", "\"\<Moment\>\"", "]"}], "[", "r___", "]"}], "/;",
+   RowBox[{"KeyMemberQ", "[",
+    RowBox[{"a", ",", "\"\<OriginalDistribution\>\""}], "]"}]}], ":=",
+  "\[IndentingNewLine]",
+  RowBox[{"(",
+   RowBox[{
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Max", "[", "r", "]"}], ">",
+       RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",",
+      RowBox[{"Message", "[",
+       RowBox[{
+        RowBox[{"DistributionMomentTruncation", "::", "excdtrnc"}], ",",
+        "r"}], "]"}]}], "]"}], ";",
+    RowBox[{"Moment", "[",
+     RowBox[{
+      RowBox[{"a", "[", "\"\<OriginalDistribution\>\"", "]"}], ",", "r"}],
+     "]"}]}], ")"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+     "[", "\"\<Moment\>\"", "]"}], "[", "r___", "]"}], "/;",
+   RowBox[{"(",
+    RowBox[{
+     RowBox[{"a", "[", "\"\<MomentDataShape\>\"", "]"}], "===",
+     "\"\<Function\>\""}], ")"}]}], ":=", "\[IndentingNewLine]",
+  RowBox[{"(",
+   RowBox[{
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Max", "[", "r", "]"}], ">",
+       RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",",
+      RowBox[{"Message", "[",
+       RowBox[{
+        RowBox[{"DistributionMomentTruncation", "::", "excdtrnc"}], ",", "r"}]
+        , "]"}]}], "]"}], ";",
+    RowBox[{
+     RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}], "[", "r", "]"}]}],
+   ")"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+     "[", "\"\<Moment\>\"", "]"}], "[",
+    RowBox[{"{",
+     RowBox[{"r", ":",
+      RowBox[{"Repeated", "[",
+       RowBox[{
+        RowBox[{"_Integer", "?", "Positive"}], ",",
+        RowBox[{"{",
+         RowBox[{"SequenceCount", "[",
+          RowBox[{
+           RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], ",",
+           RowBox[{"_Interval", "|", "_Span"}]}], "]"}], "}"}]}], "]"}]}],
+     "}"}], "]"}], "/;",
+   RowBox[{"(",
+    RowBox[{"MatchQ", "[",
+     RowBox[{"a", ",",
+      RowBox[{"KeyValuePattern", "[",
+       RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "None"}], "]"}]}],
+     "]"}], ")"}]}], ":=",
+  RowBox[{"(",
+   RowBox[{"If", "[",
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"If", "[",
+        RowBox[{
+         RowBox[{
+          RowBox[{"a", "[", "\"\<MomentDataShape\>\"", "]"}], "===",
+          "\"\<Overall\>\""}], ",", "Total", ",", "Max"}], "]"}], "[",
+       RowBox[{"{", "r", "}"}], "]"}], ">",
+      RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{"Message", "[",
+       RowBox[{
+        RowBox[{"DistributionMomentTruncation", "::", "excdtrnc"}], ",",
+        "r"}], "]"}], ";",
+      RowBox[{"Missing", "[", "\"\<Indeterminate\>\"", "]"}]}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}], "\[LeftDoubleBracket]",
+      "r", "\[RightDoubleBracket]"}]}], "]"}], ")"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+     "[", "\"\<Moment\>\"", "]"}], "[",
+    RowBox[{"{",
+     RowBox[{"r", ":",
+      RowBox[{"Repeated", "[",
+       RowBox[{
+        RowBox[{"_Integer", "?", "Positive"}], ",",
+        RowBox[{"{",
+         RowBox[{"SequenceCount", "[",
+          RowBox[{
+           RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], ",",
+           RowBox[{"_Interval", "|", "_Span"}]}], "]"}], "}"}]}], "]"}]}],
+     "}"}], "]"}], "/;",
+   RowBox[{"(",
+    RowBox[{"MatchQ", "[",
+     RowBox[{"a", ",",
+      RowBox[{"KeyValuePattern", "[",
+       RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "\"\<Independent\>\""}],
+        "]"}]}], "]"}], ")"}]}], ":=",
+  RowBox[{"(",
+   RowBox[{"If", "[",
+    RowBox[{
+     RowBox[{
+      RowBox[{"Max", "[", "r", "]"}], ">",
+      RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{"Message", "[",
+       RowBox[{
+        RowBox[{"DistributionMomentTruncation", "::", "excdtrnc"}], ",",
+        "r"}], "]"}], ";",
+      RowBox[{"Missing", "[", "\"\<Indeterminate\>\"", "]"}]}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"Times", "@@",
+      RowBox[{"MapThread", "[",
+       RowBox[{"Construct", ",",
+        RowBox[{"{",
+         RowBox[{
+          RowBox[{"Extract", "/@",
+           RowBox[{"{", "r", "}"}]}], ",",
+          RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}]}], "}"}]}], "]"}]}]}],
+     "]"}], ")"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+     "[", "\"\<Moment\>\"", "]"}], "[",
+    RowBox[{"{",
+     RowBox[{"r", ":",
+      RowBox[{"Repeated", "[",
+       RowBox[{
+        RowBox[{"_Integer", "?", "Positive"}], ",",
+        RowBox[{"{",
+         RowBox[{"SequenceCount", "[",
+          RowBox[{
+           RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], ",",
+           RowBox[{"_Interval", "|", "_Span"}]}], "]"}], "}"}]}], "]"}]}],
+     "}"}], "]"}], "/;",
+   RowBox[{"(",
+    RowBox[{"MatchQ", "[",
+     RowBox[{"a", ",",
+      RowBox[{"KeyValuePattern", "[",
+       RowBox[{"\"\<MarginalProperty\>\"", "\[Rule]", "\"\<Identical\>\""}],
+       "]"}]}], "]"}], ")"}]}], ":=",
+  RowBox[{"(",
+   RowBox[{"If", "[",
+    RowBox[{
+     RowBox[{
+      RowBox[{"Max", "[", "r", "]"}], ">",
+      RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{
+      RowBox[{"Message", "[",
+       RowBox[{
+        RowBox[{"DistributionMomentTruncation", "::", "excdtrnc"}], ",",
+        "r"}], "]"}], ";",
+      RowBox[{"Missing", "[", "\"\<Indeterminate\>\"", "]"}]}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"Times", "@@",
+      RowBox[{
+       RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}], "[",
+       RowBox[{"{", "r", "}"}], "]"}]}]}], "]"}],
+   ")"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+     "[", "\"\<Moment\>\"", "]"}], "[",
+    RowBox[{"r_Integer", "?", "Positive"}], "]"}], "/;",
+   RowBox[{"MatchQ", "[",
+    RowBox[{"a", ",",
+     RowBox[{"KeyValuePattern", "[",
+      RowBox[{"\"\<Domain\>\"", "\[Rule]",
+       RowBox[{"(",
+        RowBox[{"_Interval", "|", "_Span"}], ")"}]}], "]"}]}], "]"}]}], ":=",
+  "\[IndentingNewLine]",
+  RowBox[{
+   RowBox[{
+    RowBox[{"DistributionMomentTruncation", "[", "a", "]"}], "[",
+    "\"\<Moment\>\"", "]"}], "[",
+   RowBox[{"{", "r", "}"}], "]"}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}], "[",
+   "\"\<Properties\>\"", "]"}], ":=",
+  RowBox[{"Sort", "@",
+   RowBox[{"Keys", "[", "a", "]"}]}]}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{
+   RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}], "[",
+   "key___", "]"}], ":=",
+  RowBox[{"a", "[", "key", "]"}]}]}], "Input",
+ InitializationCell->True]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Formatting", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{
+   "define", " ", "formatting", " ", "if", " ", "you", " ", "want", " ",
+    "to"}], "*)"}], "\[IndentingNewLine]",
+  RowBox[{
+   RowBox[{
+    RowBox[{"$DistributionMomentTruncationSummaryThumbnail", "=",
+     RowBox[{"DensityPlot", "[",
+      RowBox[{
+       RowBox[{"1", "-",
+        RowBox[{"Exp", "[",
+         RowBox[{
+          RowBox[{"-", "5"}],
+          SuperscriptBox[
+           RowBox[{"(",
+            RowBox[{"y", "-",
+             RowBox[{"(",
+              RowBox[{".2", "+",
+               RowBox[{"0.5",
+                SuperscriptBox["\[ExponentialE]",
+                 RowBox[{
+                  RowBox[{"-", "8"}],
+                  SuperscriptBox[
+                   RowBox[{"(",
+                    RowBox[{"x", "+", ".5"}], ")"}], "2"]}]]}], "+",
+               RowBox[{"1.0",
+                SuperscriptBox["\[ExponentialE]",
+                 RowBox[{
+                  RowBox[{"-", "10"}],
+                  SuperscriptBox[
+                   RowBox[{"(",
+                    RowBox[{"x", "-", ".3"}], ")"}], "2"]}]]}]}], ")"}]}],
+            ")"}], "2"]}], "]"}]}], ",",
+       RowBox[{"{",
+        RowBox[{"x", ",",
+         RowBox[{"-", "1."}], ",", "1."}], "}"}], ",",
+       RowBox[{"{",
+        RowBox[{"y", ",", "0", ",", "2"}], "}"}], ",",
+       RowBox[{"PlotRange", "\[Rule]",
+        RowBox[{"{",
+         RowBox[{
+          RowBox[{"{",
+           RowBox[{
+            RowBox[{"-", "1."}], ",", "1."}], "}"}], ",",
+          RowBox[{"{",
+           RowBox[{"0.", ",", "2."}], "}"}]}], "}"}]}], ",",
+       RowBox[{"AspectRatio", "\[Rule]", "1"}], ",",
+       RowBox[{"Frame", "\[Rule]", "None"}], ",",
+       RowBox[{"PlotTheme", "\[Rule]", "\"\<Monochrome\>\""}]}], "]"}]}],
+    ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"$DistributionDomainStylizer", "=",
+     RowBox[{"Dispatch", "[",
+      RowBox[{"Reverse", "/@",
+       RowBox[{"Normal", "[", "$DistributionDomainCanonicalizer", "]"}]}],
+      "]"}]}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{
+     RowBox[{"SyntaxInformation", "[", "DistributionMomentTruncation", "]"}],
+     "=",
+     RowBox[{"{",
+      RowBox[{
+       RowBox[{"\"\<ArgumentsPattern\>\"", "\[Rule]",
+        RowBox[{"{",
+         RowBox[{"___", ",",
+          RowBox[{"OptionsPattern", "[", "]"}]}], "}"}]}], ",",
+       RowBox[{"\"\<OptionNames\>\"", "\[Rule]",
+        RowBox[{"ToString", "/@",
+         RowBox[{"First", "/@",
+          RowBox[{
+          "Options", "[", "DistributionMomentTruncation", "]"}]}]}]}]}],
+      "}"}]}], ";"}], "\[IndentingNewLine]",
+   RowBox[{
+    RowBox[{"Format", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"DistributionMomentTruncation", "[", "a_Association", "]"}],
+       "?", "DistributionMomentTruncationQ"}], ",", "StandardForm"}], "]"}], ":=",
+    RowBox[{"Block", "[",
+     RowBox[{
+      RowBox[{"{", "}"}], ",", "\[IndentingNewLine]",
+      RowBox[{"RawBoxes", "@",
+       RowBox[{"BoxForm`ArrangeSummaryBox", "[",
+        RowBox[{"DistributionMomentTruncation", ",",
+         RowBox[{"DistributionMomentTruncation", "[", "a", "]"}], ",",
+         "$DistributionMomentTruncationSummaryThumbnail", ",",
+         RowBox[{"{", "\[IndentingNewLine]",
+          RowBox[{
+           RowBox[{"{",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{"\"\<TruncationOrder\>\"", "<>", "\"\<: \>\""}], ",",
+                 RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], "}"}],
+               ",", "StandardForm"}], "]"}], ",", "\[IndentingNewLine]",
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{"\"\<Domain\>\"", "<>", "\"\<: \>\""}], ",",
+                 RowBox[{
+                  RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], "/.",
+                  "$DistributionDomainStylizer"}]}], "}"}], ",",
+               "StandardForm"}], "]"}]}], "}"}], ",", "\[IndentingNewLine]",
+           RowBox[{"If", "[",
+            RowBox[{
+             RowBox[{
+              RowBox[{"KeyMemberQ", "[",
+               RowBox[{"a", ",", "\"\<MomentForm\>\""}], "]"}], "&&",
+              RowBox[{
+               RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}], "=!=",
+               "\"\<Moment\>\""}]}], ",", "\[IndentingNewLine]",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"BoxForm`MakeSummaryItem", "[",
+                RowBox[{
+                 RowBox[{"{",
+                  RowBox[{
+                   RowBox[{"\"\<MomentForm\>\"", "<>", "\"\<: \>\""}], ",",
+                   RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}]}], "}"}],
+                 ",", "StandardForm"}], "]"}], ",", "SpanFromLeft"}], "}"}],
+             ",",
+             RowBox[{"Unevaluated", "@",
+              RowBox[{"Sequence", "[", "]"}]}]}], "]"}], ",",
+           "\[IndentingNewLine]",
+           RowBox[{"If", "[",
+            RowBox[{
+             RowBox[{"KeyMemberQ", "[",
+              RowBox[{"a", ",", "\"\<OriginalDistribution\>\""}], "]"}], ",",
+             "\[IndentingNewLine]",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"BoxForm`MakeSummaryItem", "[",
+                RowBox[{
+                 RowBox[{"{",
+                  RowBox[{
+                   RowBox[{
+                   "\"\<OriginalDistribution\>\"", "<>", "\"\<: \>\""}], ",",
+                   RowBox[{"a", "[", "\"\<OriginalDistribution\>\"", "]"}]}],
+                  "}"}], ",", "StandardForm"}], "]"}], ",", "SpanFromLeft"}],
+              "}"}], ",",
+             RowBox[{"Unevaluated", "@",
+              RowBox[{"Sequence", "[", "]"}]}]}], "]"}], ",",
+           "\[IndentingNewLine]",
+           RowBox[{"If", "[",
+            RowBox[{
+             RowBox[{
+              RowBox[{"KeyMemberQ", "[",
+               RowBox[{"a", ",", "\"\<MarginalProperty\>\""}], "]"}], "&&",
+              RowBox[{
+               RowBox[{"a", "[", "\"\<MarginalProperty\>\"", "]"}], "=!=",
+               "None"}]}], ",", "\[IndentingNewLine]",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"BoxForm`MakeSummaryItem", "[",
+                RowBox[{
+                 RowBox[{"{",
+                  RowBox[{
+                   RowBox[{"\"\<MarginalProperty\>\"", "<>", "\"\<: \>\""}],
+                   ",",
+                   RowBox[{"a", "[", "\"\<MarginalProperty\>\"", "]"}]}],
+                  "}"}], ",", "StandardForm"}], "]"}], ",", "SpanFromLeft"}],
+              "}"}], ",",
+             RowBox[{"Unevaluated", "@",
+              RowBox[{"Sequence", "[", "]"}]}]}], "]"}]}],
+          "\[IndentingNewLine]", "}"}], ",",
+         RowBox[{"{", "\[IndentingNewLine]",
+          RowBox[{
+           RowBox[{"If", "[",
+            RowBox[{
+             RowBox[{
+              RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}], "===",
+              "\"\<Moment\>\""}], ",", "\[IndentingNewLine]",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"BoxForm`MakeSummaryItem", "[",
+                RowBox[{
+                 RowBox[{"{",
+                  RowBox[{
+                   RowBox[{"\"\<MomentForm\>\"", "<>", "\"\<: \>\""}], ",",
+                   RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}]}], "}"}],
+                 ",", "StandardForm"}], "]"}], ",", "SpanFromLeft"}], "}"}],
+             ",",
+             RowBox[{"Unevaluated", "@",
+              RowBox[{"Sequence", "[", "]"}]}]}], "]"}], ",",
+           "\[IndentingNewLine]",
+           RowBox[{"If", "[",
+            RowBox[{
+             RowBox[{"KeyMemberQ", "[",
+              RowBox[{"a", ",", "\"\<MomentDataShape\>\""}], "]"}], ",",
+             "\[IndentingNewLine]",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"BoxForm`MakeSummaryItem", "[",
+                RowBox[{
+                 RowBox[{"{",
+                  RowBox[{
+                   RowBox[{"\"\<MomentDataShape\>\"", "<>", "\"\<: \>\""}],
+                   ",",
+                   RowBox[{"a", "[", "\"\<MomentDataShape\>\"", "]"}]}],
+                  "}"}], ",", "StandardForm"}], "]"}], ",", "SpanFromLeft"}],
+              "}"}], ",",
+             RowBox[{"Unevaluated", "@",
+              RowBox[{"Sequence", "[", "]"}]}]}], "]"}], ",",
+           "\[IndentingNewLine]",
+           RowBox[{"If", "[",
+            RowBox[{
+             RowBox[{"KeyMemberQ", "[",
+              RowBox[{"a", ",", "\"\<MomentData\>\""}], "]"}], ",",
+             "\[IndentingNewLine]",
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{"BoxForm`MakeSummaryItem", "[",
+                RowBox[{
+                 RowBox[{"{",
+                  RowBox[{
+                   RowBox[{"\"\<MomentData\>\"", "<>", "\"\<: \>\""}], ",",
+                   RowBox[{"Short", "@",
+                    RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}]}]}], "}"}],
+                 ",", "StandardForm"}], "]"}], ",", "SpanFromLeft"}], "}"}],
+             ",",
+             RowBox[{"Unevaluated", "@",
+              RowBox[{"Sequence", "[", "]"}]}]}], "]"}]}],
+          "\[IndentingNewLine]", "}"}], ",", "StandardForm", ",",
+         RowBox[{"\"\<Interpretable\>\"", "\[Rule]", "Automatic"}]}],
+        "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}]}]], "Input",
+ InitializationCell->True],
+
+Cell[BoxData[
+ RowBox[{"DistributionMomentTruncation", "[",
+  RowBox[{"s", ",", "s", ","}], "]"}]], "Input"]
+}]]
+}]]
+}]]
+}]]
+}]
+(* End of Notebook Content *)
