@@ -1,0 +1,15 @@
+on: [push]
+jobs:
+  run_wolfram:
+    name: Run Wolfram language code
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Run Wolfram script
+      uses: miRoox/wolfram-action@master
+      with:
+        file: script.wl
+      env:
+        WOLFRAM_ID: ${{ secrets.WolframID }}
+        WOLFRAM_PASS: ${{ secrets.WolframPW }}
