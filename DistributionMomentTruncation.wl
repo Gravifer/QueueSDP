@@ -4,6 +4,16 @@
 (*Queue-SDP-OOP*)
 
 
+(* ::Author:: *)
+(* Author: Gravifer *)
+(* Date: 2021-02-21 *)
+(* Version: 0.2.0 *)
+
+
+BeginPackage["QueueSDP`"] (*Using new-style package specification*)
+(* ClearAll[Evaluate[Context[] <> "*"]] *)
+
+
 (* ::Subsubsection:: *)
 (*Preamble*)
 
