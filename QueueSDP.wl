@@ -39,7 +39,6 @@ IntegerCompositions::usage="Hard-embedded resource function; "<>
   "The original resource function can be found at https://resources.wolframcloud.com/FunctionRepository/resources/IntegerCompositions"
 
 
-
 (* ::Subsection:: *)
 (*Basic functions*)
 
@@ -47,7 +46,7 @@ IntegerCompositions::usage="Hard-embedded resource function; "<>
 integerCompositions[n_, k_] := integerCompositions[n, k] = Reverse[IntegerCompositions[n, k]];
 integerCompositions::usage="gives a list of all compositions of integer $n$ into $k$ parts in anti-canonical order."
 
-edg2mat = Outer[Plus,#,#]&;(*((row \[Function] (col \[Function] (row + col)) /@ #) /@ #) &;*)
+edg2mat = Outer[Plus,#,#]&; (*((row \[Function] (col \[Function] (row + col)) /@ #) /@ #) &;*)
 
 
 (* ::Subsection:: *)
@@ -195,13 +194,19 @@ ConstraintEqnView[array_List | array_SparseArray] :=
     (Total[Times[#, matX[All]], {1, 3}] == If[ArrayDepth @ array > 3, 0, 1]) &] @ Normal[array]; 
 
 IndieA::usage="The constraint of independence; a list of 3-d arrays."
-IndieA = (SparseArray /@ 
+IndieA1 = (SparseArray /@ 
   Map[(\[FormalY] |->
-        SparseArray[{Prepend[loc[\[FormalY]       ], _] :> 1                   }, Prepend[matICdim, Power[2,K]] ] -
+        SparseArray[{Prepend[loc[\[FormalY]       ], _] :> 1                   }, Prepend[matICdim, Power[2,K]] ]
+    ), DeleteDuplicates[Flatten[#, 1]]
+  ] /. (SparseArray[{_ :> 0}, Prepend[matICdim, Power[2,K] ] ] -> Nothing)
+) &@matIC;
+IndieAm = (SparseArray /@ 
+  Map[(\[FormalY] |->
         SparseArray[{Prepend[loc[\[FormalY]*{1, 0}], _] :> m[\[FormalY][[-1]] ]}, Prepend[matICdim, Power[2,K]] ]
     ), DeleteDuplicates[Flatten[#, 1]]
   ] /. (SparseArray[{_ :> 0}, Prepend[matICdim, Power[2,K] ] ] -> Nothing)
 ) &@matIC;
+IndieA = IndieA1 - IndieAm;
 
 CombieA::usage="The constraint of combinatorics; a list of 3-d arrays."
 CombieA = -(SparseArray@
