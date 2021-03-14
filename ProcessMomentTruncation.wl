@@ -1,16 +1,16 @@
 (* ::Package:: *)
 
 (* ::Title:: *)
-(*Queue-SDP-OOP*)
+(*ProcessMomentTruncation*)
 
 
 (* ::Author:: *)
 (* Author: Gravifer *)
-(* Date: 2021-02-21 *)
-(* Version: 0.2.0 *)
+(* Date: 2021-03-08 *)
+(* Version: 0.1-alpha.3 *)
 
 
-BeginPackage["QueueSDP`"] (*Using new-style package specification*)
+Package["QueueSDP`"] (*Using new-style package specification*)
 (* ClearAll[Evaluate[Context[] <> "*"]] *)
 ClearAll[ProcessMomentTruncation];
 ClearAll[$ProcessDomainCanonicalizer,
@@ -37,7 +37,15 @@ PackageScope["instantiateProcessMomentTruncation"]
 
 
 (* ::Section:: *)
-(*Usage messages*)
+(*Messages*)
+
+
+(* ::Subsection:: *)
+(*Usage*)
+
+
+(* ::Subsection:: *)
+(*Diagnose*)
 
 
 ProcessMomentTruncation::nocanon="Cannot construct a valid ProcessMomentTruncation from the given options `1`.";
@@ -66,21 +74,17 @@ Options[ProcessMomentTruncation] = {(*This allow for setting default values; whe
 
 
 (* ::ItemNumbered:: *)
-(*From a distribution*)
+(*From a process*)
 
 
-(* ::SubItemNumbered:: *)
+(* ::Subitem:: *)
 (*No truncation returns usual distribution computations*)
 
 
 ProcessMomentTruncation[dist_?ProcessParameterQ]:=dist
-ProcessMomentTruncation[
-  dist_?ProcessParameterQ,
-  type:"Moment"|"FactorialMoment"|"CentralMoment"|"Cumulant"
-][r_]:=Symbol[type][dist,r]
 
 
-(* ::SubItemNumbered:: *)
+(* ::Subitem:: *)
 (*Valid truncation specification*)
 
 
@@ -111,7 +115,7 @@ ProcessMomentTruncation[
 ]
 
 
-(* ::SubItemNumbered:: *)
+(* ::Subitem:: *)
 (*Infinite truncation casts to the original distribution*)
 
 

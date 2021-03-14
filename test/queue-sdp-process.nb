@@ -1,0 +1,1333 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ProcessMomentTruncation", "Title"],
+
+Cell["\<\
+ Author: Gravifer
+ Date: 2021-03-08
+ Version: 0.1-alpha.3 \
+\>", "Author"],
+
+Cell[BoxData[
+ RowBox[{"ClearAll", "[",
+  RowBox[{"Evaluate", "[",
+   RowBox[{
+    RowBox[{"Context", "[", "]"}], " ", "<>", " ", "\"\<*\>\""}], "]"}],
+  "]"}]], "Code"],
+
+Cell[CellGroupData[{
+
+Cell["Messages", "Section"],
+
+Cell["Usage", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["Diagnose", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "::", "nocanon"}], "=",
+   "\"\<Cannot construct a valid ProcessMomentTruncation from the given \
+options `1`.\>\""}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "::", "noentry"}], "=",
+   "\"\<Cannot construct a valid ProcessMomentTruncation because the entry \
+`1` is not provided and cannot be inferred.\>\""}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "::", "noimplm"}], "=",
+   "\"\<The required feature `1` is not implemented yet.\>\""}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "::", "excdtrnc"}], "=",
+   "\"\<The `1`-th moment exceeds the order of the truncation.\>\""}],
+  ";"}]}], "Code"]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Definitions", "Section"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "ProcessMomentTruncation", "]"}], " ", "=", " ",
+   RowBox[{"{",
+    RowBox[{"(*",
+     RowBox[{
+      RowBox[{
+       RowBox[{
+       "This", " ", "allow", " ", "for", " ", "setting", " ", "default", " ",
+        "values"}], ";", " ",
+       RowBox[{"when", " ", "initializing", " ", "a", " ", "truncation"}]}],
+      ",", " ",
+      RowBox[{
+      "unaccessed", " ", "entries", " ", "should", " ", "be", " ",
+       "deleted"}]}], "*)"}], "\n", "  ",
+    RowBox[{
+     RowBox[{"\"\<TruncationOrder\>\"", "  ", "->", " ", "None"}], ",", " ",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"positive", " ", "integer"}], ";", " ",
+       RowBox[{"major", " ", "parameter"}]}], "*)"}], "\n", "  ",
+     RowBox[{"\"\<OriginalProcess\>\"", "  ", "->", " ", "None"}], ",", " ",
+     RowBox[{"(*",
+      RowBox[{
+       RowBox[{"if", " ", "supplied"}], ",", " ",
+       RowBox[{
+        RowBox[{
+        "the", " ", "moment", " ", "sequence", " ", "is", " ", "always", " ",
+         "generated", " ", "using", " ", "the", " ", "moment", " ",
+         "function", " ", "of", " ", "the", " ", "original", " ",
+         "distribution"}], ";", " ",
+        RowBox[{
+        "there", " ", "may", " ", "be", " ", "need", " ", "for", " ",
+         "memoisation"}]}]}], "*)"}], "\n", "  ",
+     RowBox[{"\"\<SliceDistribution\>\"", "->", " ", "None"}], ",", " ",
+     RowBox[{"(*",
+      RowBox[{
+      "can", " ", "be", " ", "a", " ", "standard", " ", Cell[
+       "Distribution",ExpressionUUID->"01768c01-7415-44cf-b669-b50df14d1b64"],
+        " ", "or", " ", "a", " ", Cell[
+       "DistributionMomentTruncation",ExpressionUUID->
+        "ab78d95e-8db9-45d7-9511-fe31596f7d52"]}], "*)"}], "\n", "  ",
+     RowBox[{"\"\<MarginalProperty\>\"", " ", "->", " ", "None"}], ",", " ",
+     RowBox[{"(*", " ",
+      RowBox[{"None", "|", "\"\<Independent\>\"", "|", "\"\<Identical\>\""}],
+      " ", "*)"}], "\n", "  ",
+     RowBox[{"\"\<TemporalProperty\>\"", " ", "->", " ", "None"}], ",", " ",
+     RowBox[{"(*", " ",
+      RowBox[{"None", "|", "\"\<Independent\>\"", "|", "\"\<Markovian\>\""}],
+      " ", "*)"}], "\n", "  ",
+     RowBox[{"\"\<MomentForm\>\"", "   ", "->", " ", "\"\<Moment\>\""}], ",",
+     " ",
+     RowBox[{"(*", " ",
+      RowBox[{
+       RowBox[{
+       "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+        "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ",", " ",
+       RowBox[{
+        RowBox[{
+        "following", " ", "the", " ", "specification", " ", "of", " ",
+         "MomentConvert"}], ";"}]}], "*)"}],
+     RowBox[{"(*", " ",
+      RowBox[{"TODO", ":", " ",
+       RowBox[{
+       "may", " ", "also", " ", "support", " ", "truncated", " ",
+        "probability", " ", "sequence", " ", "in", " ", "the", " ",
+        "future"}]}], "*)"}], "\n", "  ",
+     RowBox[{"\"\<MomentData\>\"", "       ", "->", " ", "None"}], ",", "\n",
+     "  ",
+     RowBox[{"\"\<MomentDataShape\>\"", "  ", "->", " ", "None"}], ",", " ",
+     RowBox[{"(*", " ",
+      RowBox[{
+       RowBox[{
+       "\"\<Full\>\"", "|", "\"\<Overall\>\"", "|", "\"\<Function\>\""}], ";",
+        " ",
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<Full\>\"", " ", "should", " ", "be", " ",
+          RowBox[{"assumed", ".", " ", "Only"}], " ", "meaningful", " ",
+          "for", " ", "multi"}], "-",
+         RowBox[{
+         "dimensional", " ", "distributions", " ", "when", " ",
+          "\"\<MarginalProperty\>\""}]}], " ", "->", " ",
+        RowBox[{"None", "."}]}]}], "*)"}], "\n", "  ",
+     RowBox[{"\"\<StateDomain\>\"", " ", "->", " ", "None"}], ",", "\n", "  ",
+     RowBox[{"\"\<TimeDomain\>\"", "  ", "->", " ", "None"}]}], "\n", "}"}]}],
+   ";"}]], "Code"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"ProcessTimeDomain", "[",
+  RowBox[{"PoissonProcess", "[", "1", "]"}], "]"}], "\[IndentingNewLine]",
+ RowBox[{"ProcessStateDomain", "[",
+  RowBox[{"PoissonProcess", "[", "1", "]"}], "]"}]}], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Moment", "[",
+  RowBox[{
+   RowBox[{
+    RowBox[{"PoissonProcess", "[", "1", "]"}], "[", "1", "]"}], ",", "1"}],
+  "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ProcessStateDomain", "[",
+  RowBox[{"TelegraphProcess", "[", "1", "]"}], "]"}]], "Input"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Initializers", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["From a process", "ItemNumbered"],
+
+Cell[CellGroupData[{
+
+Cell["No truncation returns usual distribution computations", "Subitem"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ProcessMomentTruncation", "[",
+   RowBox[{"proc_", "?", "ProcessParameterQ"}], "]"}], ":=", "proc"}]], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Valid truncation specification", "Subitem"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+     RowBox[{
+      RowBox[{
+       RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol", "|",
+       RowBox[{"trunc", ":", "Infinity"}]}], ",", "\n", "  ",
+      RowBox[{"type", ":",
+       RowBox[{
+       "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+        "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ":",
+       "\"\<Moment\>\""}], ",", "\n", "  ",
+      RowBox[{"ops", ":",
+       RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "]"}], "[",
+    RowBox[{"dist_", "?", "ProcessParameterQ"}], "]"}], " ", ":=", " ",
+   RowBox[{"ProcessMomentTruncation", "[",
+    RowBox[{"trunc", ",", " ", "dist", ",", " ", "type", ",", " ", "ops"}],
+    "]"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+    RowBox[{
+     RowBox[{
+      RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol"}], ",",
+     "\n", "  ",
+     RowBox[{"dist_", "?", "ProcessParameterQ"}], ",", "\n", "  ",
+     RowBox[{"type", ":",
+      RowBox[{
+      "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+       "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ":",
+      "\"\<Moment\>\""}], ",", "\n", "  ",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "]"}], " ", ":=", " ",
+   RowBox[{"ProcessMomentTruncation", "[",
+    RowBox[{"trunc", ",", " ", "dist", ",", "\n", "  ",
+     RowBox[{"\"\<MomentForm\>\"", " ", "->", " ", "type"}], ",", "\n", "  ",
+     RowBox[{"Sequence", "@@",
+      RowBox[{"FilterRules", "[",
+       RowBox[{
+        RowBox[{"{", "ops", "}"}], ",", " ",
+        RowBox[{"Except", "[",
+         RowBox[{
+         "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+          "\"\<MomentForm\>\"", "|", "\"\<MomentData\>\"", "|",
+          "\"\<MomentDataShape\>\""}], "]"}]}], "]"}]}]}], "\n", "]"}]}],
+  "\n"}], "\n",
+ RowBox[{
+  RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol"}], ",",
+    "\n", "  ",
+    RowBox[{"dist_", "?", "ProcessParameterQ"}], ",", "\n", "  ",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "]"}], " ", ":=", " ",
+  RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+   RowBox[{
+    RowBox[{"\"\<TruncationOrder\>\"", " ", "->", " ", "trunc"}], ",", "\n",
+    "  ",
+    RowBox[{"\"\<OriginalProcess\>\"", " ", "->", " ", "dist"}], ",", "\n",
+    "  ",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+         "\"\<MomentData\>\"", "|", "\"\<MomentDataShape\>\""}], "]"}]}],
+      "]"}]}]}], "\n", "]"}]}]}], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Infinite truncation casts to the original distribution", "Subitem"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ProcessMomentTruncation", "[",
+   RowBox[{"Infinity", ",", " ",
+    RowBox[{"dist_", "?", "ProcessParameterQ"}], ",", " ",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "dist"}]], "Code"]
+}]]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["From a moment function", "ItemNumbered"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol", "|",
+     RowBox[{"trunc", ":", "Infinity"}]}], ",", "\n", "  ",
+    RowBox[{"moments_Function", "|", "moments_Symbol"}], ",", "\n", "  ",
+    RowBox[{"type", ":",
+     RowBox[{
+     "\"\<Moment\>\"", "|", "\"\<FactorialMoment\>\"", "|",
+      "\"\<CentralMoment\>\"", "|", "\"\<Cumulant\>\""}], ":",
+     "\"\<Moment\>\""}], ",", "\n", "  ",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "]"}], " ", ":=", " ",
+  RowBox[{"ProcessMomentTruncation", "[",
+   RowBox[{"trunc", ",", " ", "moments", ",", "\n", "  ",
+    RowBox[{"\"\<MomentForm\>\"", " ", "->", " ", "type"}], ",", "\n", "  ",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+         "\"\<MomentForm\>\"", "|", "\"\<MomentData\>\"", "|",
+         "\"\<MomentDataShape\>\""}], "]"}]}], "]"}]}]}], "\n", "]"}]}], "\n",
+ RowBox[{
+  RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+   RowBox[{
+    RowBox[{
+     RowBox[{"trunc_Integer", "?", "Positive"}], "|", "trunc_Symbol", "|",
+     RowBox[{"trunc", ":", "Infinity"}]}], ",", "\n", "  ",
+    RowBox[{"moments_Function", "|", "moments_Symbol"}], ",", "\n", "  ",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "]"}], " ", ":=", " ",
+  RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+   RowBox[{
+    RowBox[{"\"\<TruncationOrder\>\"", " ", "->", " ", "trunc"}], ",", "\n",
+    "  ",
+    RowBox[{"\"\<MomentData\>\"", " ", "->", " ", "moments"}], ",", "\n",
+    "  ",
+    RowBox[{"\"\<MomentDataShape\>\"", " ", "->", " ", "\"\<Function\>\""}],
+    ",", "\n", "  ",
+    RowBox[{"Sequence", "@@",
+     RowBox[{"FilterRules", "[",
+      RowBox[{
+       RowBox[{"{", "ops", "}"}], ",",
+       RowBox[{"Except", "[",
+        RowBox[{
+        "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+         "\"\<MomentData\>\"", "|", "\"\<MomentDataShape\>\""}], "]"}]}],
+      "]"}]}]}], "\n", "]"}]}]}], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["From a moment array", "ItemNumbered"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+    RowBox[{
+     RowBox[{"moments_", "?", "VectorQ"}], ",", "\n", "  ",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[",
+       RowBox[{"{", "\n", "    ",
+        RowBox[{
+         RowBox[{"\"\<Domain\>\"", " ", "->", " ",
+          RowBox[{"Interval", "[",
+           RowBox[{"{",
+            RowBox[{
+             RowBox[{"-", "\[Infinity]"}], ",", " ", "\[Infinity]"}], "}"}],
+           "]"}]}], ",", " ",
+         RowBox[{"(*",
+          RowBox[{
+           RowBox[{"default", " ", "to", " ", "a", " ", "1"}], "-",
+           RowBox[{"d", " ", "distribution"}]}], "*)"}], "\n", "    ",
+         "ProcessMomentTruncation"}], "\n", "  ", "}"}], "]"}]}]}], "\n",
+    "]"}], " ", ":=", " ",
+   RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+    RowBox[{
+     RowBox[{"\"\<TruncationOrder\>\"", " ", "->", " ",
+      RowBox[{"Length", "[", "moments", "]"}]}], ",", "\n", "  ",
+     RowBox[{"\"\<MomentData\>\"", " ", "->", " ", "moments"}], ",", "\n",
+     "  ",
+     RowBox[{"\"\<Domain\>\"", " ", "->", " ",
+      RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}]}], ",", "\n", "  ",
+     RowBox[{"If", "[", " ",
+      RowBox[{
+       RowBox[{"MatchQ", "[", " ",
+        RowBox[{
+         RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}], ",", " ",
+         RowBox[{"_Interval", "|", "_Span"}]}], "]"}], ",", " ",
+       RowBox[{"(*",
+        RowBox[{"one", " ", "dimensional", " ", "or", " ", "not"}], "*)"}],
+       "\n", "    ",
+       RowBox[{"Unevaluated", "@",
+        RowBox[{"Sequence", "[", "]"}]}], ",", "\n", "    ",
+       RowBox[{
+       "\"\<MarginalProperty\>\"", " ", "->", " ", "\"\<Identical\>\""}]}],
+      "\n", "  ", "]"}], ",", "\n", "  ",
+     RowBox[{"Sequence", "@@",
+      RowBox[{"FilterRules", "[",
+       RowBox[{
+        RowBox[{"{", "ops", "}"}], ",",
+        RowBox[{"Except", "[",
+         RowBox[{
+         "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+          "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+          "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}], "\n", "]"}]}],
+  "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+    RowBox[{
+     RowBox[{"moments_", "?", "MatrixQ"}], ",",
+     RowBox[{"(*",
+      RowBox[{
+      "This", " ", "is", " ", "primarily", " ", "for", " ", "independent",
+       " ", "margins"}], "*)"}], "\n", "  ",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[",
+       RowBox[{"{", "\n", "    ",
+        RowBox[{
+         RowBox[{"\"\<Domain\>\"", "->", "None"}], ",", "\n", "    ",
+         "ProcessMomentTruncation"}], "\n", "  ", "}"}], "]"}]}]}], "\n",
+    "]"}], " ", ":=", " ",
+   RowBox[{"Module", "[",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{"domain", " ", "=", " ",
+       RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}]}], "}"}], ",",
+     "\n", "  ",
+     RowBox[{"If", "[",
+      RowBox[{
+       RowBox[{
+        RowBox[{"SquareMatrixQ", "[", "moments", "]"}], "\n", "      ", "&&",
+        " ",
+        RowBox[{"Not", "@",
+         RowBox[{"MatchQ", "[",
+          RowBox[{
+           RowBox[{"OptionValue", "[", "\"\<MarginalProperty\>\"", "]"}], ",",
+            " ",
+           RowBox[{"\"\<Identical\>\"", "|", "\"\<Independent\>\""}]}],
+          "]"}]}], "\n", "      ", "&&", " ",
+        RowBox[{"(",
+         RowBox[{
+          RowBox[{
+           RowBox[{"OptionValue", "[", "\"\<MomentDataShape\>\"", "]"}],
+           "===", "\"\<Full\>\""}], "\n", "          ", "||", " ",
+          RowBox[{"(",
+           RowBox[{
+            RowBox[{"MatchQ", "[",
+             RowBox[{"domain", ",", " ",
+              RowBox[{"{",
+               RowBox[{
+                RowBox[{"_Interval", "|", "_Span"}], ",", " ",
+                RowBox[{"_Interval", "|", "_Span"}]}], "}"}]}], "]"}], "\n",
+            "              ", "&&", " ",
+            RowBox[{
+             RowBox[{"Length", "[", "moments", "]"}], " ", ">", " ", "2"}]}],
+           "\n", "            ", ")"}]}], "\n", "        ", ")"}]}], ",", " ",
+       RowBox[{"(*",
+        RowBox[{
+         RowBox[{
+         "handle", " ", "the", " ", "case", " ", "when", " ", "the", " ",
+          "distribution", " ", "happens", " ", "to", " ", "be", " ", "2"}],
+         "-", "d"}], "*)"}], "\n", "    ",
+       RowBox[{
+        RowBox[{"If", "[",
+         RowBox[{
+          RowBox[{"domain", "===", "None"}], ",", " ", "\n", "      ",
+          RowBox[{"domain", " ", "=", " ",
+           RowBox[{"Table", "[",
+            RowBox[{
+             RowBox[{"Interval", "[",
+              RowBox[{"{",
+               RowBox[{
+                RowBox[{"-", "\[Infinity]"}], ",", " ", "\[Infinity]"}],
+               "}"}], "]"}], ",", " ", "2"}], "]"}]}]}], "\n", "    ", "]"}],
+        ";", " ",
+        RowBox[{"ProcessMomentTruncation", "[", "\n", "      ",
+         RowBox[{
+          RowBox[{"\"\<TruncationOrder\>\"", " ", "->", " ",
+           RowBox[{
+            RowBox[{"Length", "[", "moments", "]"}], "-", "1"}]}], ",", " ",
+          RowBox[{"(*",
+           RowBox[{"note", " ", "this"}], "*)"}], "\n", "      ",
+          RowBox[{"\"\<MomentData\>\"", " ", "->", " ", "moments"}], ",",
+          "\n", "      ",
+          RowBox[{"\"\<Domain\>\"", " ", "->", " ", "domain"}], ",", "\n",
+          "      ",
+          RowBox[{"\"\<MarginalProperty\>\"", " ", "->", " ", "None"}], ",",
+          "\n", "      ",
+          RowBox[{"Sequence", "@@",
+           RowBox[{"FilterRules", "[",
+            RowBox[{
+             RowBox[{"{", "ops", "}"}], ",", " ",
+             RowBox[{"Except", "[",
+              RowBox[{
+              "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+               "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+               "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}], "\n", "    ",
+          "]"}]}], ",", " ",
+       RowBox[{"(*",
+        RowBox[{"otherwise", ",", " ",
+         RowBox[{
+          RowBox[{
+          "it", " ", "must", " ", "be", " ", "the", " ",
+           "\"\<MarginalProperty\>\""}], "->",
+          RowBox[{"\"\<Independent\>\"", " ", "case"}]}]}], "*)"}], "\n",
+       "    ",
+       RowBox[{
+        RowBox[{"If", "[",
+         RowBox[{
+          RowBox[{"domain", "===", "None"}], ",", " ", "\n", "      ",
+          RowBox[{"domain", " ", "=", " ",
+           RowBox[{"Table", "[",
+            RowBox[{
+             RowBox[{"Interval", "[",
+              RowBox[{"{",
+               RowBox[{
+                RowBox[{"-", "\[Infinity]"}], ",", " ", "\[Infinity]"}],
+               "}"}], "]"}], ",", " ",
+             RowBox[{"Length", "[", "moments", "]"}]}], "]"}]}]}], "\n",
+         "    ", "]"}], ";", " ",
+        RowBox[{"ProcessMomentTruncation", "[", "\n", "      ",
+         RowBox[{
+          RowBox[{"\"\<TruncationOrder\>\"", " ", "->", " ",
+           RowBox[{"Length", "[", "moments", "]"}]}], ",", "\n", "      ",
+          RowBox[{"\"\<MomentData\>\"", " ", "->", " ", "moments"}], ",",
+          "\n", "      ",
+          RowBox[{"\"\<Domain\>\"", " ", "->", " ", "domain"}], ",", "\n",
+          "      ",
+          RowBox[{
+          "\"\<MarginalProperty\>\"", " ", "->", " ", "\"\<Independent\>\""}],
+           ",", "\n", "      ",
+          RowBox[{"Sequence", "@@",
+           RowBox[{"FilterRules", "[",
+            RowBox[{
+             RowBox[{"{", "ops", "}"}], ",",
+             RowBox[{"Except", "[",
+              RowBox[{
+              "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+               "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+               "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}], "\n", "    ",
+          "]"}]}]}], "\n", "  ", "]"}]}], "\n", "]"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "[", "\n", "  ",
+    RowBox[{
+     RowBox[{"moments_", "?", "ArrayQ"}], ",", " ",
+     RowBox[{"(*",
+      RowBox[{"currently", ",", " ",
+       RowBox[{
+        RowBox[{"only", " ", "\"\<MomentDataShape\>\""}], "->",
+        RowBox[{"\"\<Full\>\"", " ", "is", " ", "supported"}]}]}], "*)"}],
+     "\n", "  ",
+     RowBox[{"ops", ":",
+      RowBox[{"OptionsPattern", "[",
+       RowBox[{"{", "\n", "    ",
+        RowBox[{
+         RowBox[{"\"\<Domain\>\"", "->", "None"}], ",", "\n", "    ",
+         "ProcessMomentTruncation"}], "\n", "  ", "}"}], "]"}]}]}], "\n",
+    "]"}], " ", ":=", " ",
+   RowBox[{"Module", "[",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{"domain", " ", "=", " ",
+       RowBox[{"If", "[",
+        RowBox[{
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}], "===",
+          "None"}], ",", "\n", "              ",
+         RowBox[{"Table", "[",
+          RowBox[{
+           RowBox[{"Interval", "[",
+            RowBox[{"{",
+             RowBox[{
+              RowBox[{"-", "\[Infinity]"}], ",", " ", "\[Infinity]"}], "}"}],
+            "]"}], ",", "\n", "              ",
+           RowBox[{"ArrayDepth", "[", "moments", "]"}]}], "]"}]}], "\n",
+        "              ", "]"}]}], "}"}], ",", "\n", "  ",
+     RowBox[{"ProcessMomentTruncation", "[", "\n", "    ",
+      RowBox[{
+       RowBox[{"\"\<TruncationOrder\>\"", " ", "->", " ",
+        RowBox[{
+         RowBox[{"Length", "[", "moments", "]"}], "-", "1"}]}], ",", " ",
+       RowBox[{"(*",
+        RowBox[{"note", " ", "this"}], "*)"}], "\n", "    ",
+       RowBox[{"\"\<MomentData\>\"", "  ", "->", " ", "moments"}], ",", "\n",
+       "    ",
+       RowBox[{"\"\<MomentDataShape\>\"", " ", "->", " ", "\"\<Full\>\""}],
+       ",", "\n", "    ",
+       RowBox[{"\"\<Domain\>\"", " ", "->", " ", "domain"}], ",", "\n",
+       "    ",
+       RowBox[{"\"\<MarginalProperty\>\"", " ", "->", " ", "None"}], ",",
+       "\n", "    ",
+       RowBox[{"Sequence", "@@",
+        RowBox[{"FilterRules", "[",
+         RowBox[{
+          RowBox[{"{", "ops", "}"}], ",",
+          RowBox[{"Except", "[",
+           RowBox[{
+           "\"\<TruncationOrder\>\"", "|", "\"\<OriginalProcess\>\"", "|",
+            "\"\<MomentData\>\"", "|", "\"\<Domain\>\"", "|",
+            "\"\<MarginalProperty\>\""}], "]"}]}], "]"}]}]}], "\n", "  ",
+      "]"}]}], "\n", "]"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{"ProcessMomentTruncation", "[",
+   RowBox[{"ops", ":",
+    RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], " ", ":=", " ",
+  RowBox[{"ProcessMomentTruncation", "[",
+   RowBox[{"canonicalizeProcessMomentTruncation", "[", "ops", "]"}],
+   "]"}]}]}], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Canonicalize the Truncation", "Item"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"$ProcessDomainCanonicalizer", "=",
+    RowBox[{"Dispatch", "@",
+     RowBox[{"{", "\n", "  ",
+      RowBox[{
+       RowBox[{"Reals", "               ", "->", " ",
+        RowBox[{"Interval", "[",
+         RowBox[{"{",
+          RowBox[{
+           RowBox[{"-", "\[Infinity]"}], ",", "  ", "\[Infinity]"}], "}"}],
+         "]"}]}], ",", "\n", "  ",
+       RowBox[{"Integers", "            ", "->", "         ",
+        RowBox[{"(", " ",
+         RowBox[{
+          RowBox[{"-", "\[Infinity]"}], ";;", " ", "\[Infinity]"}], " ",
+         ")"}]}], ",", "\n", "  ",
+       RowBox[{"NonNegativeReals", "    ", "->", " ",
+        RowBox[{"Interval", "[",
+         RowBox[{"{", " ",
+          RowBox[{"0", "          ", ",", "  ", "\[Infinity]"}], "}"}],
+         "]"}]}], ",", "\n", "  ",
+       RowBox[{"NonPositiveReals", "    ", "->", " ",
+        RowBox[{"Interval", "[",
+         RowBox[{"{",
+          RowBox[{
+           RowBox[{"-", "\[Infinity]"}], ",", "  ", "0"}], "          ",
+          "}"}], "]"}]}], ",", "\n", "  ",
+       RowBox[{"NonNegativeIntegers", " ", "->", "         ",
+        RowBox[{"(", "  ",
+         RowBox[{"0", "          ", ";;", " ", "\[Infinity]"}], " ", ")"}]}],
+       ",", "\n", "  ",
+       RowBox[{"NonPositiveIntegers", " ", "->", "         ",
+        RowBox[{"(", " ",
+         RowBox[{
+          RowBox[{"-", "\[Infinity]"}], ";;", " ", "0"}], "           ",
+         ")"}]}], ",", "\n", "  ",
+       RowBox[{"PositiveIntegers", "    ", "->", "         ",
+        RowBox[{"(", "  ",
+         RowBox[{"1", "          ", ";;", " ", "\[Infinity]"}], " ", ")"}]}],
+       ",", "\n", "  ",
+       RowBox[{"NegativeIntegers", "    ", "->", "         ",
+        RowBox[{"(", " ",
+         RowBox[{
+          RowBox[{"-", "\[Infinity]"}], ";;",
+          RowBox[{"-", "1"}]}], "           ", ")"}]}]}], " ", "}"}]}]}],
+   ";"}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{"canonicalizeProcessMomentTruncation", "[",
+   RowBox[{"ops", ":",
+    RowBox[{"OptionsPattern", "[", "ProcessMomentTruncation", "]"}]}], "]"}],
+  ":=",
+  RowBox[{"Which", "[", "\n", "  ",
+   RowBox[{
+    RowBox[{
+     RowBox[{"Length", "@",
+      RowBox[{"{", "ops", "}"}]}], "<", "1"}], ",", "\n", "    ",
+    RowBox[{
+     RowBox[{"Message", "[",
+      RowBox[{
+       RowBox[{"ProcessMomentTruncation", "::", "nocanon"}], ",",
+       RowBox[{"{", "ops", "}"}]}], "]"}], ";", "\n", "    ", "$Failed"}],
+    ",", "\n", "  ",
+    RowBox[{
+     RowBox[{
+      RowBox[{"OptionValue", "[", "\"\<MomentDataShape\>\"", "]"}], "===",
+      "\"\<Function\>\""}], " ", "&&", " ",
+     RowBox[{"(",
+      RowBox[{
+       RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}], "===", "None"}],
+      ")"}]}], ",", "\n", "    ",
+    RowBox[{
+     RowBox[{"Message", "[",
+      RowBox[{
+       RowBox[{"ProcessMomentTruncation", "::", "noentry"}], ",",
+       RowBox[{"{", "\"\<Domain\>\"", "}"}]}], "]"}], ";", "\n", "    ",
+     "$Failed"}], ",", "\n", "  ", "True", ",", "\n", "    ",
+    RowBox[{"Module", "[",
+     RowBox[{
+      RowBox[{"{",
+       RowBox[{"truncdata", "=",
+        RowBox[{"{", "ops", "}"}]}], "}"}], ",", "\n", "      ",
+      RowBox[{
+       RowBox[{"If", "[",
+        RowBox[{
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<MomentDataShape\>\"", "]"}],
+          "===", "\"\<Overall\>\""}], ",", "\n", "        ",
+         RowBox[{
+          RowBox[{"Message", "[",
+           RowBox[{
+            RowBox[{"ProcessMomentTruncation", "::", "noimplm"}], ",", " ",
+            RowBox[{
+            "\"\<MomentDataShape\>\"", " ", "->", " ", "\"\<Overall\>\""}]}],
+           "]"}], ";", "\n", "        ",
+          RowBox[{"AppendTo", "[",
+           RowBox[{"truncdata", ",", " ",
+            RowBox[{
+            "\"\<MomentDataShape\>\"", " ", "->", " ", "\"\<Full\>\""}]}],
+           "]"}]}]}], "\n", "      ", "]"}], ";", "\n", "      ",
+       RowBox[{"AppendTo", "[",
+        RowBox[{"truncdata", ",", " ",
+         RowBox[{
+          RowBox[{"\"\<Domain\>\"", " ", "->", " ",
+           RowBox[{"OptionValue", "[", "\"\<Domain\>\"", "]"}]}], "/.",
+          "$ProcessDomainCanonicalizer"}]}], "]"}], ";", "\n", "      ",
+       RowBox[{"If", "[",
+        RowBox[{
+         RowBox[{"ProcessParameterQ", "[",
+          RowBox[{"OptionValue", "[", "\"\<OriginalProcess\>\"", "]"}], "]"}],
+          ",", "\n", "        ",
+         RowBox[{"AppendTo", "[",
+          RowBox[{"truncdata", ",", " ",
+           RowBox[{"\"\<Domain\>\"", " ", "->", " ",
+            RowBox[{"ProcessDomain", "[",
+             RowBox[{"OptionValue", "[", "\"\<OriginalProcess\>\"", "]"}],
+             "]"}]}]}], "]"}]}], "\n", "      ", "]"}], ";", "\n", "      ",
+       RowBox[{"AppendTo", "[",
+        RowBox[{"truncdata", ",", " ",
+         RowBox[{"\"\<MomentForm\>\"", " ", "->", " ",
+          RowBox[{"OptionValue", "[", "\"\<MomentForm\>\"", "]"}]}]}], "]"}],
+       ";", "\n", "      ",
+       RowBox[{"Sort", "@",
+        RowBox[{"Association", "[", "truncdata", "]"}]}]}]}], "\n", "    ",
+     "]"}]}], "\n", "]"}]}]}], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Validators", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*",
+   RowBox[{"#TODO", ":", " ",
+    RowBox[{
+    "make", " ", "some", " ", "validators", " ", "so", " ", "you", " ", "can",
+      " ", "always", " ", "be", " ", "sure", " ", "you", " ", "have", " ",
+     "a", " ", "valid", " ", "ProcessMomentTruncation", " ", "without", " ",
+     "constantly", " ", "having", " ", "to", " ", "check", " ", "it"}]}],
+   "*)"}], "\n",
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "validateProcessMomentTruncation", "[", "assoc_Association", "]"}], ":=",
+    RowBox[{"And", "[", "\n", "  ",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Length", "[", "assoc", "]"}], " ", ">", " ", "0"}], ",", "\n",
+       "  ",
+      RowBox[{"Match", "[", " ",
+       RowBox[{"assoc", ",", " ",
+        RowBox[{"KeyValuePattern", "[",
+         RowBox[{"\"\<TruncationOrder\>\"", "->",
+          RowBox[{"Integer", "?", "Positive"}]}], "]"}]}], "]"}], ",", "\n",
+      "  ",
+      RowBox[{"Match", "[", " ",
+       RowBox[{"assoc", ",", " ",
+        RowBox[{"KeyValuePattern", "[",
+         RowBox[{"\"\<Domain\>\"", "         ", "->",
+          RowBox[{"Except", "[", "None", "]"}]}], "    ", "]"}]}], "]"}]}],
+     "\n", "]"}]}],
+   RowBox[{"(*",
+    RowBox[{"reimplement", " ", "this"}], "*)"}], "\n", "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "assoc_Association", "]"}], "?",
+       "NotProcessMomentTruncationQ"}], " ", ":=", "\n", "  ",
+     RowBox[{
+      RowBox[{"System`Private`HoldSetValid", "[",
+       RowBox[{"ProcessMomentTruncation", "[", "assoc", "]"}], "]"}], "/;",
+      RowBox[{"validateProcessMomentTruncation", "[", "assoc", "]"}]}]}],
+    ";"}], "\n", "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"ProcessMomentTruncationQ", "[", "distrlx_", "]"}], " ", ":=",
+     " ",
+     RowBox[{"System`Private`HoldValidQ", "[", "distrlx", "]"}]}], ";"}],
+   "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"ProcessMomentTruncationQ", "[", "_", "]"}], " ", ":=", " ",
+     "False"}], ";"}], "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"ProcessMomentTruncationQ", "[", "symbol_Symbol", "]"}], " ", ":=",
+      " ",
+     RowBox[{"(", "\n", "  ",
+      RowBox[{
+       RowBox[{
+        RowBox[{"Head", "[", "symbol", "]"}], "===",
+        "ProcessMomentTruncation"}], "\n", "  ", "&&", " ",
+       RowBox[{"ProcessMomentTruncationQ", "[",
+        RowBox[{"Evaluate", "[", "symbol", "]"}], "]"}]}], "\n", ")"}]}],
+    ";"}], "\n",
+   RowBox[{
+    RowBox[{
+    "ProcessMomentTruncationQ", "~", "SetAttributes", "~", "HoldFirst"}],
+    ";"}], "\n", "\n",
+   RowBox[{
+    RowBox[{
+     RowBox[{"NotProcessMomentTruncationQ", "[", "distrlx_", "]"}], " ", ":=",
+      " ",
+     RowBox[{"Not", "[",
+      RowBox[{"ProcessMomentTruncationQ", "[", "distrlx", "]"}], "]"}]}],
+    ";"}], "\n",
+   RowBox[{
+    RowBox[{
+    "NotProcessMomentTruncationQ", "~", "SetAttributes", "~", "HoldFirst"}],
+    ";"}], "\n"}]}]], "Code"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"instantiateProcessMomentTruncation", "[", "\n", "  ",
+   RowBox[{"distrlx_ProcessMomentTruncation", ",", "\n", "  ",
+    RowBox[{"ops", ":",
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "]"}], " ", ":=", " ",
+  RowBox[{"Missing", "[", "\"\<NotAvailable\>\"", "]"}], " ",
+  RowBox[{"(*",
+   RowBox[{
+    RowBox[{
+     RowBox[{"#TODO", ":", " ",
+      RowBox[{
+      "Default", " ", "to", " ", "naive", " ", "polynomial", " ", "moment",
+       " ", "matching"}]}], ";", " ",
+     RowBox[{
+     "possible", " ", "alternatives", " ", "including", " ", "orthogonal",
+      " ", "polynomials"}]}], ",", " ",
+    RowBox[{"piecewise", "-",
+     RowBox[{"constant", " ",
+      RowBox[{"(", "histogram", ")"}]}]}], ",", " ",
+    RowBox[{"point", "-", "masses"}], ",", " ",
+    RowBox[{"smooth", "-",
+     RowBox[{"kernel", " ",
+      RowBox[{"distributions", "."}]}]}]}], "*)"}]}]], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Accessors", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+    "\"\<Moment\>\"", "]"}], "[", "0", "]"}], ":=", "1"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+      "\"\<Moment\>\"", "]"}], "[", "r___", "]"}], " ", "/;", " ",
+    RowBox[{"KeyMemberQ", "[",
+     RowBox[{"a", ",", "\"\<OriginalProcess\>\""}], "]"}]}], " ", ":=", " ",
+   RowBox[{"(", "\n", "  ",
+    RowBox[{
+     RowBox[{"If", "[",
+      RowBox[{
+       RowBox[{
+        RowBox[{"Max", "[", "r", "]"}], " ", ">", " ",
+        RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",", " ",
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"ProcessMomentTruncation", "::", "excdtrnc"}], ",", " ",
+         "r"}], "]"}]}], "]"}], ";", "\n", "  ",
+     RowBox[{"Moment", "[",
+      RowBox[{
+       RowBox[{"a", "[", "\"\<OriginalProcess\>\"", "]"}], ",", " ", "r"}],
+      "]"}]}], "\n", ")"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+      "\"\<Moment\>\"", "]"}], "[", "r___", "]"}], " ", "/;", " ",
+    RowBox[{"(",
+     RowBox[{
+      RowBox[{"a", "[", "\"\<MomentDataShape\>\"", "]"}], "===",
+      "\"\<Function\>\""}], ")"}]}], "  ", ":=", " ",
+   RowBox[{"(", "\n", "  ",
+    RowBox[{
+     RowBox[{"If", "[",
+      RowBox[{
+       RowBox[{
+        RowBox[{"Max", "[", "r", "]"}], " ", ">", " ",
+        RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",", " ",
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"ProcessMomentTruncation", "::", "excdtrnc"}], ",", " ",
+         "r"}], "]"}]}], "]"}], ";", "\n", "  ",
+     RowBox[{
+      RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}], "[", "r", "]"}]}], "\n",
+    ")"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+      "\"\<Moment\>\"", "]"}], "[", "\n", "  ",
+     RowBox[{"{",
+      RowBox[{"r", ":",
+       RowBox[{"Repeated", "[",
+        RowBox[{
+         RowBox[{"_Integer", "?", "Positive"}], ",", " ", "\n", "      ",
+         RowBox[{"{",
+          RowBox[{"SequenceCount", "[",
+           RowBox[{
+            RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], ",", " ",
+            RowBox[{"_Interval", "|", "_Span"}]}], "]"}], "}"}]}], "\n",
+        "    ", "]"}]}], "}"}], "\n", "]"}], " ", "/;", " ",
+    RowBox[{"(",
+     RowBox[{"MatchQ", "[",
+      RowBox[{"a", ",",
+       RowBox[{"KeyValuePattern", "[",
+        RowBox[{"\"\<MarginalProperty\>\"", "->", "None"}], "]"}]}], "]"}],
+     ")"}]}], " ", ":=", " ",
+   RowBox[{"(", "\n", "  ",
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"If", "[",
+         RowBox[{
+          RowBox[{
+           RowBox[{"a", "[", "\"\<MomentDataShape\>\"", "]"}], "===",
+           "\"\<Overall\>\""}], ",", " ", "\n", "        ", "Total", ",",
+          "\n", "        ", "Max"}], "\n", "      ", "]"}], "[",
+        RowBox[{"{", "r", "}"}], "]"}], " ", ">", " ",
+       RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",", "\n",
+      "    ",
+      RowBox[{
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"ProcessMomentTruncation", "::", "excdtrnc"}], ",", " ",
+         "r"}], "]"}], ";", " ",
+       RowBox[{"Missing", "[", "\"\<Indeterminate\>\"", "]"}]}], ",", "\n",
+      "    ",
+      RowBox[{
+       RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}], "[",
+       RowBox[{"[", "r", "]"}], "]"}]}], "\n", "  ", "]"}], "\n", ")"}]}],
+  "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+      "\"\<Moment\>\"", "]"}], "[", "\n", "  ",
+     RowBox[{"{",
+      RowBox[{"r", ":",
+       RowBox[{"Repeated", "[",
+        RowBox[{
+         RowBox[{"_Integer", "?", "Positive"}], ",", "\n", "      ",
+         RowBox[{"{",
+          RowBox[{"SequenceCount", "[",
+           RowBox[{
+            RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], ",", " ",
+            RowBox[{"_Interval", "|", "_Span"}]}], "]"}], "}"}]}], "\n",
+        "    ", "]"}]}], "}"}], "\n", "]"}], " ", "/;", " ",
+    RowBox[{"(",
+     RowBox[{"MatchQ", "[",
+      RowBox[{"a", ",", " ",
+       RowBox[{"KeyValuePattern", "[",
+        RowBox[{"\"\<MarginalProperty\>\"", "->", "\"\<Independent\>\""}],
+        "]"}]}], "]"}], ")"}]}], " ", ":=", " ",
+   RowBox[{"(", "\n", "  ",
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Max", "[", "r", "]"}], " ", ">", " ",
+       RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",", "\n",
+      "    ",
+      RowBox[{
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"ProcessMomentTruncation", "::", "excdtrnc"}], ",", " ",
+         "r"}], "]"}], ";", " ",
+       RowBox[{"Missing", "[", "\"\<Indeterminate\>\"", "]"}]}], ",", "\n",
+      "    ",
+      RowBox[{"Times", "@@",
+       RowBox[{"MapThread", "[",
+        RowBox[{"Construct", ",", " ",
+         RowBox[{"{", "\n", "      ",
+          RowBox[{
+           RowBox[{"Extract", "/@",
+            RowBox[{"{", "r", "}"}]}], ",", "\n", "      ",
+           RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}]}], "\n", "    ",
+          "}"}]}], "]"}]}]}], "\n", "  ", "]"}], "\n", ")"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+      "\"\<Moment\>\"", "]"}], "[", "\n", "  ",
+     RowBox[{"{",
+      RowBox[{"r", ":",
+       RowBox[{"Repeated", "[",
+        RowBox[{
+         RowBox[{"_Integer", "?", "Positive"}], ",", "\n", "      ",
+         RowBox[{"{",
+          RowBox[{"SequenceCount", "[",
+           RowBox[{
+            RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], ",", " ",
+            RowBox[{"_Interval", "|", "_Span"}]}], "]"}], "}"}]}], "\n",
+        "    ", "]"}]}], "}"}], "\n", "]"}], " ", "/;", " ",
+    RowBox[{"(",
+     RowBox[{"MatchQ", "[",
+      RowBox[{"a", ",", " ",
+       RowBox[{"KeyValuePattern", "[",
+        RowBox[{"\"\<MarginalProperty\>\"", "->", "\"\<Identical\>\""}],
+        "]"}]}], "]"}], ")"}]}], " ", ":=", " ",
+   RowBox[{"(", "\n", "  ",
+    RowBox[{"If", "[",
+     RowBox[{
+      RowBox[{
+       RowBox[{"Max", "[", "r", "]"}], ">",
+       RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}], ",", "\n",
+      "    ",
+      RowBox[{
+       RowBox[{"Message", "[",
+        RowBox[{
+         RowBox[{"ProcessMomentTruncation", "::", "excdtrnc"}], ",", " ",
+         "r"}], "]"}], ";", " ",
+       RowBox[{"Missing", "[", "\"\<Indeterminate\>\"", "]"}]}], ",", "\n",
+      "    ",
+      RowBox[{"Times", "@@",
+       RowBox[{
+        RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}], "[",
+        RowBox[{"{", "r", "}"}], "]"}]}]}], "\n", "  ", "]"}], "\n", ")"}]}],
+  "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+      "\"\<Moment\>\"", "]"}], "[",
+     RowBox[{"r_Integer", "?", "Positive"}], "]"}], " ", "/;", " ",
+    RowBox[{"MatchQ", "[",
+     RowBox[{"a", ",", " ",
+      RowBox[{"KeyValuePattern", "[",
+       RowBox[{"\"\<Domain\>\"", "->",
+        RowBox[{"(",
+         RowBox[{"_Interval", "|", "_Span"}], ")"}]}], "]"}]}], "]"}]}], " ",
+   ":=", "\n", "  ",
+   RowBox[{
+    RowBox[{
+     RowBox[{"ProcessMomentTruncation", "[", "a", "]"}], "[",
+     "\"\<Moment\>\"", "]"}], "[",
+    RowBox[{"{", "r", "}"}], "]"}]}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+   "\"\<Properties\>\"", "]"}], " ", ":=", " ",
+  RowBox[{"Sort", "@",
+   RowBox[{"Keys", "[", "a", "]"}]}]}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "[",
+   "key___", "]"}], " ", ":=", " ",
+  RowBox[{"a", "[", "key", "]"}]}]}], "Code"]
+}]],
+
+Cell[CellGroupData[{
+
+Cell["Formatting", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "$ProcessMomentTruncationSummaryThumbnail", " ", "=", " ", "\n", "  ",
+   RowBox[{"DensityPlot", "[",
+    RowBox[{
+     RowBox[{"1", "-",
+      RowBox[{"Exp", "[",
+       RowBox[{
+        RowBox[{"-", "5"}], " ",
+        RowBox[{
+         RowBox[{"(",
+          RowBox[{"y", "-",
+           RowBox[{"(",
+            RowBox[{".2", "+",
+             RowBox[{"0.5",
+              RowBox[{"E", "^",
+               RowBox[{"(",
+                RowBox[{
+                 RowBox[{"-", "8"}], " ",
+                 RowBox[{
+                  RowBox[{"(",
+                   RowBox[{"x", "+", ".5"}], ")"}], "^", "2"}]}], ")"}]}]}],
+             "+",
+             RowBox[{"1.0",
+              RowBox[{"E", "^",
+               RowBox[{"(",
+                RowBox[{
+                 RowBox[{"-", "10"}], " ",
+                 RowBox[{
+                  RowBox[{"(",
+                   RowBox[{"x", "-", ".3"}], ")"}], "^", "2"}]}], ")"}]}]}]}],
+             ")"}]}], ")"}], "^", "2"}]}], "]"}]}], ",", " ",
+     RowBox[{"{",
+      RowBox[{"x", ",",
+       RowBox[{"-", "1."}], ",", "1."}], "}"}], ",", " ",
+     RowBox[{"{",
+      RowBox[{"y", ",", "0", ",", "2"}], "}"}], ",", "\n", "    ",
+     RowBox[{"PlotRange", " ", "->", " ",
+      RowBox[{"{",
+       RowBox[{
+        RowBox[{"{",
+         RowBox[{
+          RowBox[{"-", "1."}], ",", "1."}], "}"}], ",",
+        RowBox[{"{",
+         RowBox[{"0.", ",", "2."}], "}"}]}], "}"}]}], ",", "\n", "    ",
+     RowBox[{"AspectRatio", " ", "->", " ", "1"}], ",", "\n", "    ",
+     RowBox[{"Frame", " ", "->", " ", "None"}], ",", "\n", "    ",
+     RowBox[{"PlotTheme", " ", "->", " ", "\"\<Monochrome\>\""}]}], "\n",
+    "  ", "]"}]}], ";"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{"$ProcessDomainStylizer", " ", "=", " ",
+    RowBox[{"Dispatch", "[",
+     RowBox[{"Reverse", "/@",
+      RowBox[{"Normal", "[", "$ProcessDomainCanonicalizer", "]"}]}], "]"}]}],
+   ";"}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"SyntaxInformation", "[", "ProcessMomentTruncation", "]"}], " ",
+    "=", " ",
+    RowBox[{"{", "\n", "  ",
+     RowBox[{
+      RowBox[{"\"\<ArgumentsPattern\>\"", " ", "->", " ",
+       RowBox[{"{",
+        RowBox[{"___", ",",
+         RowBox[{"OptionsPattern", "[", "]"}]}], "}"}]}], ",", "\n", "  ",
+      RowBox[{"\"\<OptionNames\>\"", " ", "->", " ",
+       RowBox[{"ToString", "/@",
+        RowBox[{"First", "/@",
+         RowBox[{"Options", "[", "ProcessMomentTruncation", "]"}]}]}]}]}],
+     "\n", "}"}]}], ";"}], "\n"}], "\n",
+ RowBox[{
+  RowBox[{"Format", "[",
+   RowBox[{
+    RowBox[{
+     RowBox[{"ProcessMomentTruncation", "[", "a_Association", "]"}], "?",
+     "ProcessMomentTruncationQ"}], ",", " ", "StandardForm"}], "]"}], " ", ":=",
+   " ",
+  RowBox[{"Block", "[",
+   RowBox[{
+    RowBox[{"{", "}"}], ",", "\n", "  ",
+    RowBox[{"RawBoxes", "@",
+     RowBox[{"BoxForm`ArrangeSummaryBox", "[", "\n", "    ",
+      RowBox[{"ProcessMomentTruncation", ",", "\n", "    ",
+       RowBox[{"ProcessMomentTruncation", "[", "a", "]"}], ",", "\n", "    ",
+       "$ProcessMomentTruncationSummaryThumbnail", ",", "\n", "    ",
+       RowBox[{"{", " ",
+        RowBox[{
+         RowBox[{"{", " ",
+          RowBox[{
+           RowBox[{"BoxForm`MakeSummaryItem", "[",
+            RowBox[{
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{
+               "\"\<TruncationOrder\>\"", "     ", "<>", "\"\<: \>\""}], ",",
+               " ",
+               RowBox[{"a", "[", "\"\<TruncationOrder\>\"", "]"}]}],
+              "                    ", "}"}], ",", " ", "StandardForm"}],
+            "]"}], ",", "\n", "        ",
+           RowBox[{"BoxForm`MakeSummaryItem", "[",
+            RowBox[{
+             RowBox[{"{",
+              RowBox[{
+               RowBox[{
+               "\"\<Domain\>\"", "              ", "<>", "\"\<: \>\""}], ",",
+               " ",
+               RowBox[{
+                RowBox[{"a", "[", "\"\<Domain\>\"", "]"}], "/.",
+                "$ProcessDomainStylizer"}]}], "}"}], ",", " ",
+             "StandardForm"}], "]"}]}], "}"}], ",", "\n", "      ",
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{
+            RowBox[{"KeyMemberQ", "[",
+             RowBox[{"a", ",", "\"\<MomentForm\>\""}], "]"}], "&&",
+            RowBox[{
+             RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}], "=!=",
+             "\"\<Moment\>\""}]}], ",",
+           RowBox[{"{", "\n", "        ",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{
+                 "\"\<MomentForm\>\"", "          ", "<>", "\"\<: \>\""}],
+                 ",", " ",
+                 RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}]}],
+                "                         ", "}"}], ",", " ",
+               "StandardForm"}], "]"}], ",", " ", "SpanFromLeft"}], "}"}],
+           ",", "\n", "        ",
+           RowBox[{"Unevaluated", "@",
+            RowBox[{"Sequence", "[", "]"}]}]}], "\n", "      ", "]"}], ",",
+         "\n", "      ",
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{"KeyMemberQ", "[",
+            RowBox[{"a", ",", "\"\<OriginalProcess\>\""}], "]"}], ",",
+           RowBox[{"{", "\n", "        ",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{"\"\<OriginalProcess\>\"", "<>", "\"\<: \>\""}], ",",
+                  " ",
+                 RowBox[{"a", "[", "\"\<OriginalProcess\>\"", "]"}]}],
+                "               ", "}"}], ",", " ", "StandardForm"}], "]"}],
+             ",", " ", "SpanFromLeft"}], "}"}], ",", "\n", "        ",
+           RowBox[{"Unevaluated", "@",
+            RowBox[{"Sequence", "[", "]"}]}]}], "\n", "      ", "]"}], ",",
+         "\n", "      ",
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{
+            RowBox[{"KeyMemberQ", "[",
+             RowBox[{"a", ",", "\"\<MarginalProperty\>\""}], "]"}], " ", "&&",
+             " ",
+            RowBox[{
+             RowBox[{"a", "[", "\"\<MarginalProperty\>\"", "]"}], "=!=",
+             "None"}]}], ",",
+           RowBox[{"{", "\n", "        ",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{
+                 "\"\<MarginalProperty\>\"", "    ", "<>", "\"\<: \>\""}],
+                 ",", " ",
+                 RowBox[{"a", "[", "\"\<MarginalProperty\>\"", "]"}]}],
+                "                   ", "}"}], ",", " ", "StandardForm"}],
+              "]"}], ",", " ", "SpanFromLeft"}], "}"}], ",", "\n", "        ",
+           RowBox[{"Unevaluated", "@",
+            RowBox[{"Sequence", "[", "]"}]}]}], "\n", "      ", "]"}]}], "\n",
+         "    ", "}"}], ",", " ",
+       RowBox[{"{", "\n", "      ",
+        RowBox[{
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{
+            RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}], "===",
+            "\"\<Moment\>\""}], ",",
+           RowBox[{"{", "\n", "        ",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{
+                 "\"\<MomentForm\>\"", "          ", "<>", "\"\<: \>\""}],
+                 ",", " ",
+                 RowBox[{"a", "[", "\"\<MomentForm\>\"", "]"}]}],
+                "                         ", "}"}], ",", " ",
+               "StandardForm"}], "]"}], ",", " ", "SpanFromLeft"}], "}"}],
+           ",", "\n", "        ",
+           RowBox[{"Unevaluated", "@",
+            RowBox[{"Sequence", "[", "]"}]}]}], "\n", "      ", "]"}], ",",
+         "\n", "      ",
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{"KeyMemberQ", "[",
+            RowBox[{"a", ",", "\"\<MomentDataShape\>\""}], "]"}], ",",
+           RowBox[{"{", "\n", "        ",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{
+                 "\"\<MomentDataShape\>\"", "     ", "<>", "\"\<: \>\""}],
+                 ",", " ",
+                 RowBox[{"a", "[", "\"\<MomentDataShape\>\"", "]"}]}],
+                "                    ", "}"}], ",", " ", "StandardForm"}],
+              "]"}], ",", " ", "SpanFromLeft"}], "}"}], ",", "\n", "        ",
+           RowBox[{"Unevaluated", "@",
+            RowBox[{"Sequence", "[", "]"}]}]}], "\n", "      ", "]"}], ",",
+         "\n", "      ",
+         RowBox[{"If", "[",
+          RowBox[{
+           RowBox[{"KeyMemberQ", "[",
+            RowBox[{"a", ",", "\"\<MomentData\>\""}], "]"}], ",",
+           RowBox[{"{", "\n", "        ",
+            RowBox[{
+             RowBox[{"BoxForm`MakeSummaryItem", "[",
+              RowBox[{
+               RowBox[{"{",
+                RowBox[{
+                 RowBox[{
+                 "\"\<MomentData\>\"", "          ", "<>", "\"\<: \>\""}],
+                 ",", " ",
+                 RowBox[{"Short", "@",
+                  RowBox[{"a", "[", "\"\<MomentData\>\"", "]"}]}]}],
+                "                   ", "}"}], ",", " ", "StandardForm"}],
+              "]"}], ",", " ", "SpanFromLeft"}], "}"}], ",", "\n", "        ",
+           RowBox[{"Unevaluated", "@",
+            RowBox[{"Sequence", "[", "]"}]}]}], "\n", "      ", "]"}]}], "\n",
+         "    ", "}"}], ",", "\n", "  ", "StandardForm", ",", " ",
+       RowBox[{"\"\<Interpretable\>\"", " ", "->", " ", "Automatic"}]}],
+      "]"}]}]}], "\n", "]"}]}], "\n"}], "Code"]
+}]]
+}]]
+}]]
+}]]
+}]
+(* End of Notebook Content *)

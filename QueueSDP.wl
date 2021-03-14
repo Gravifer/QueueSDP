@@ -22,6 +22,7 @@ ClearAll[ProcessMomentTruncation,QueueMomentTruncation];
 (* ::Section:: *)
 (*Definitions*)
 
+
 Begin["`Private`"]
 ClearAll[Evaluate[Context[] <> "*"]]
 
@@ -38,6 +39,8 @@ IntegerCompositions::usage="Hard-embedded resource function; "<>
   "gives a list of all compositions of integer $n$ into $k$ parts in canonical order. "<>
   "The original resource function can be found at https://resources.wolframcloud.com/FunctionRepository/resources/IntegerCompositions"
 
+
+
 (* ::Subsection:: *)
 (*Basic functions*)
 
@@ -45,7 +48,7 @@ IntegerCompositions::usage="Hard-embedded resource function; "<>
 integerCompositions[n_, k_] := integerCompositions[n, k] = Reverse[IntegerCompositions[n, k]];
 integerCompositions::usage="gives a list of all compositions of integer $n$ into $k$ parts in anti-canonical order."
 
-edg2mat = ((row \[Function] (col \[Function] (row + col)) /@ #) /@ #) &;
+edg2mat = Outer[Plus,#,#]&;(*((row \[Function] (col \[Function] (row + col)) /@ #) /@ #) &;*)
 
 
 (* ::Subsection:: *)
@@ -94,6 +97,9 @@ matX[All] = Table[matX[k], {k, 1, Power[2,K]}];
 
 
 (* ::Text:: *)
+(**)
+
+
 (*In the semi-definite optimisation procedure, 
 m(\[Beta]) = \[DoubleStruckCapitalE][X^\[Beta]]=\[DoubleStruckCapitalE][(S-A)^\[Beta]], 
 the moments of the increments to the per-queue waiting times must be known. 
@@ -146,6 +152,7 @@ ServiceMoments[\[Beta]_List] := ServiceMoments[\[Beta]] =
 (* ::Subsubsection:: *)
 (*Increment*)
 
+
 m::usage = "Moments of X; the generally true form from the arrival and service moments."; 
 m[\[Beta]_List] := m[\[Beta]] =
   Product[
@@ -190,7 +197,7 @@ ConstraintEqnView[array_List | array_SparseArray] :=
 
 IndieA::usage="The constraint of independence; a list of 3-d arrays."
 IndieA = (SparseArray /@ 
-  Map[(\[FormalY] \[Function]
+  Map[(\[FormalY] |->
         SparseArray[{Prepend[loc[\[FormalY]       ], _] :> 1                   }, Prepend[matICdim, Power[2,K]] ] -
         SparseArray[{Prepend[loc[\[FormalY]*{1, 0}], _] :> m[\[FormalY][[-1]] ]}, Prepend[matICdim, Power[2,K]] ]
     ), DeleteDuplicates[Flatten[#, 1]]
@@ -237,7 +244,7 @@ UnieA = SparseArray@ SparseArray[Prepend[loc[ConstantArray[0, {2, K}]], _] -> 1,
 
 CoinA::usage="Additional constraint due to coincident entries; only one 3-d array.";
 CoinA = If[# != {}, SparseArray, Identity]@ Flatten[#, 1]& @(
-  (mat \[Function] 
+  (mat |-> 
     If[Length[mat] > 2, 
       SparseArray[#,  matICdim] & /@
         ({mat[[1]] -> 1, # -> -1} & /@ mat[[2 ;; Ceiling[Length[mat]/2]]]),

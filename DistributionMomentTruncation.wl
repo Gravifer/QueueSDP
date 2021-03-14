@@ -6,11 +6,11 @@
 
 (* ::Author:: *)
 (* Author: Gravifer *)
-(* Date: 2021-02-21 *)
-(* Version: 0.2.0 *)
+(* Date: 2021-03-08 *)
+(* Version: 0.1-alpha.3 *)
 
 
-BeginPackage["QueueSDP`"] (*Using new-style package specification*)
+Package["QueueSDP`"] (*Using new-style package specification*)
 (* ClearAll[Evaluate[Context[] <> "*"]] *)
 ClearAll[DistributionMomentTruncation];
 ClearAll[$DistributionDomainCanonicalizer,
@@ -37,7 +37,15 @@ PackageScope["instantiateDistributionMomentTruncation"]
 
 
 (* ::Section:: *)
-(*Usage messages*)
+(*Messages*)
+
+
+(* ::Subsection:: *)
+(*Usage*)
+
+
+(* ::Subsection:: *)
+(*Diagnose*)
 
 
 DistributionMomentTruncation::nocanon="Cannot construct a valid DistributionMomentTruncation from the given options `1`.";
