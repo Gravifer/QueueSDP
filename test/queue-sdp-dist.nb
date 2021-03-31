@@ -9,7 +9,9 @@ Cell["Queue-SDP-OOP", "Title"],
 Cell[CellGroupData[{
 
 Cell["Preamble", "Subsubsection",
- CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+ CellGroupingRules->{
+  "GroupTogetherGrouping",
+   10000.}],
 
 Cell[BoxData[{
  RowBox[{
@@ -53,11 +55,11 @@ Cell[BoxData[{
 
              DynamicBox[FEPrivate`FrontEndResource[
               "FEBitmaps", "IconizeCloser"],
-              ImageSizeCache->{8.25, {1., 7.25}}], False->
+              ImageSizeCache->{11., {3., 8.}}], False->
 
              DynamicBox[FEPrivate`FrontEndResource[
               "FEBitmaps", "IconizeOpener"],
-              ImageSizeCache->{8.25, {1., 7.25}}]},
+              ImageSizeCache->{11., {3., 8.}}]},
              Appearance->None,
              BaselinePosition->Baseline,
              ContentPadding->False,
@@ -227,13 +229,13 @@ Cell["Related Symbols", "Subsection"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"Names", "[", "\"\<*Process*\>\"", "]"}], ";"}]], "Input"],
+  RowBox[{"Names", "[", "\"\<*Process*\>\"", "]"}], ";"}]], "Input",Expression\
+UUID->"e9f22acb-3e18-440b-8e9e-c36dea1c41ee"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"Names", "[", "\"\<*Distribution*\>\"", "]"}], ";"}]], "Input"],
-
-Cell[CellGroupData[{
+  RowBox[{"Names", "[", "\"\<*Distribution*\>\"", "]"}], ";"}]], "Input",Expre\
+ssionUUID->"e1bd2a4e-e6ac-4b22-9a0c-cf06a1f7f3ed"],
 
 Cell[BoxData[
  RowBox[{"MapThread", "[",
@@ -243,8 +245,8 @@ Cell[BoxData[
      RowBox[{"{",
       RowBox[{"f", ",", "g", ",", "h"}], "}"}], ",",
      RowBox[{"{",
-      RowBox[{"a", ",", "b", ",", "c"}], "}"}]}], "}"}]}], "]"}]], "Input"]
-}]]
+      RowBox[{"a", ",", "b", ",", "c"}], "}"}]}], "}"}]}], "]"}]], "Input",Exp\
+ressionUUID->"8eef5ddc-f25c-49be-a4bd-2999206ff1f3"]
 }]],
 
 Cell[CellGroupData[{
@@ -270,13 +272,13 @@ Cell[BoxData[{
       RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=",
     RowBox[{"Algebra", "[",
      RowBox[{"canonicalizeAlgebraData", "[", "ops", "]"}], "]"}]}], ";"}],
-  "\n",
+  "\[IndentingNewLine]",
   RowBox[{"(*",
    RowBox[{
    "do", " ", "the", " ", "minimum", " ", "work", " ", "necessary", " ", "to",
      " ", "make", " ", "sure", " ", "all", " ", "the", " ", "data", " ",
     "for", " ", "the", " ", "Algebra", " ", "is", " ", "there"}],
-   "*)"}]}], "\[IndentingNewLine]",
+   "*)"}]}], "\n",
  RowBox[{
   RowBox[{
    RowBox[{"canonicalizeAlgebraData", "[",
@@ -351,7 +353,8 @@ Cell[BoxData[
      RowBox[{"Algebra", ",",
       RowBox[{"Algebra", "[", "a", "]"}], ",", "None", ",",
       RowBox[{"{", "\"\<Put summary info here\>\"", "}"}], ",",
-      RowBox[{"{", "}"}], ",", "StandardForm"}], "]"}]}]}]}]], "Input"],
+      RowBox[{"{", "}"}], ",", "StandardForm"}], "]"}]}]}]}]], "Input",Express\
+ionUUID->"38879ab5-6175-49c1-9411-4da7b23acd4c"],
 
 Cell[BoxData[
  RowBox[{
@@ -386,7 +389,8 @@ Cell[BoxData[
         RowBox[{
          RowBox[{"Algebra", "[", "a_", "]"}], "?", "AlgebraQ"}]}], ")"}],
       "[", "\"\<Dimensions\>\"", "]"}], ":=",
-     RowBox[{"getAlgebraDimension", "[", "g", "]"}]}], ";"}]}]}]], "Input"],
+     RowBox[{"getAlgebraDimension", "[", "g", "]"}]}], ";"}]}]}]], "Input",Exp\
+ressionUUID->"9633ea76-db9e-4a99-9262-5e0c0bd71289"],
 
 Cell[BoxData[
  RowBox[{
@@ -422,7 +426,8 @@ Cell[BoxData[
      RowBox[{"getAlgebraProduct", "[",
       RowBox[{"a", ",",
        RowBox[{"{",
-        RowBox[{"el1", ",", "el2"}], "}"}]}], "]"}]}], ";"}]}]}]], "Input"],
+        RowBox[{"el1", ",", "el2"}], "}"}]}], "]"}]}], ";"}]}]}]], "Input",Exp\
+ressionUUID->"b91693ad-4ef1-4845-a4ad-d7a38a053989"],
 
 Cell[BoxData[
  RowBox[{
@@ -506,8 +511,6 @@ Cell[BoxData[
         RowBox[{"el1_", ",", "el2_"}], "}"}]}], "]"}], ":=",
      "\"\<Product, TBD\>\""}], ";"}]}]}]], "Input"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[{
  RowBox[{"a", "=",
   RowBox[{"Algebra", "[",
@@ -519,8 +522,8 @@ Cell[BoxData[{
     RowBox[{"Algebra", "[",
      RowBox[{"<|",
       RowBox[{"\"\<MultTable\>\"", "\[Rule]",
-       RowBox[{"{", "}"}]}], "|>"}], "]"}]}], "*)"}]}]}], "Input"]
-}]]
+       RowBox[{"{", "}"}]}], "|>"}], "]"}]}], "*)"}]}]}], "Input",ExpressionUU\
+ID->"27f46e62-0d8d-4475-9d21-122d477fffd2"]
 }]],
 
 Cell[CellGroupData[{
@@ -1555,7 +1558,8 @@ Cell[BoxData[
      RowBox[{
       RowBox[{
        RowBox[{"Length", "[", "assoc", "]"}], ">", "0"}], ",",
-      RowBox[{"KeyMemberQ", "[", "\"\<TruncationOrder\>\"", "]"}]}],
+      RowBox[{"KeyMemberQ", "[",
+       RowBox[{"assoc", ",", "\"\<TruncationOrder\>\""}], "]"}]}],
      "\[IndentingNewLine]", "]"}]}],
    RowBox[{"(*",
     RowBox[{"reimplement", " ", "this"}], "*)"}], "\[IndentingNewLine]",
@@ -1636,6 +1640,8 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell["Accessors", "Subsubsection"],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
@@ -1862,6 +1868,7 @@ of the truncation.\>\""}], ";"}], "\[IndentingNewLine]",
    "key___", "]"}], ":=",
   RowBox[{"a", "[", "key", "]"}]}]}], "Input",
  InitializationCell->True]
+}]]
 }]],
 
 Cell[CellGroupData[{
@@ -2100,9 +2107,13 @@ Cell[BoxData[
         "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}]}]], "Input",
  InitializationCell->True],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[
  RowBox[{"DistributionMomentTruncation", "[",
-  RowBox[{"s", ",", "s", ","}], "]"}]], "Input"]
+  RowBox[{"10", ",",
+   RowBox[{"ExponentialDistribution", "[", "1.", "]"}]}], "]"}]], "Input"]
+}]]
 }]]
 }]]
 }]]
