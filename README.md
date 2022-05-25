@@ -1,5 +1,5 @@
 # QueueSDP
-[![View notebooks](https://wolfr.am/HAAhzkRq)](https://wolfr.am/TPaqP8aH)
+[![DOI](https://zenodo.org/badge/345304982.svg)](https://zenodo.org/badge/latestdoi/345304982)[![View notebooks](https://wolfr.am/HAAhzkRq)](https://wolfr.am/TPaqP8aH)
 
 A wolfram language package for applications of semi-definite programming in queuing theory.
 
